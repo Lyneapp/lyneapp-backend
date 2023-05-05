@@ -44,11 +44,6 @@ public class SecurityConfiguration {
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder((PasswordEncoder) passwordEncoder);
     }
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-
     @Bean
     public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
         return new JwtAuthenticationEntryPoint();
@@ -63,7 +58,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
             .authorizeHttpRequests()
-            .requestMatchers("/auth/**").permitAll()
+            .requestMatchers("api/auth/v*/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()

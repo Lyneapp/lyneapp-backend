@@ -1,4 +1,5 @@
-package com.phoenixtype.lyneapp.onboarding.model;
+package com.phoenixtype.lyneapp.preferences.model;
+
 
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -54,8 +55,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
 
-    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
-            message = "Email must have the standard email pattern")
+    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Email must have the standard email pattern")
     private String emailAddress;
 
     private String currentCity;

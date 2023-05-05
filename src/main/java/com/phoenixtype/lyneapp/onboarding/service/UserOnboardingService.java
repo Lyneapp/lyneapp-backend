@@ -1,11 +1,12 @@
 package com.phoenixtype.lyneapp.onboarding.service;
 
-import com.phoenixtype.lyneapp.onboarding.exception.AccountNotEnabledException;
-import com.phoenixtype.lyneapp.onboarding.exception.InvalidVerificationCodeException;
-import com.phoenixtype.lyneapp.onboarding.exception.PasswordMismatchException;
-import com.phoenixtype.lyneapp.onboarding.exception.PhoneNumberAlreadyExistsException;
+import com.phoenixtype.lyneapp.onboarding.exception.*;
 import com.phoenixtype.lyneapp.onboarding.miscellaneous.UserPrincipal;
-import com.phoenixtype.lyneapp.onboarding.model.User;
+import com.phoenixtype.lyneapp.onboarding.model.*;
+import com.phoenixtype.lyneapp.onboarding.model.request.YourPasswordRequest;
+import com.phoenixtype.lyneapp.onboarding.model.request.YourPhoneNumberRequest;
+import com.phoenixtype.lyneapp.onboarding.model.request.UserLoginRequest;
+import com.phoenixtype.lyneapp.onboarding.model.request.VerifyPhoneNumberRequest;
 import com.phoenixtype.lyneapp.onboarding.repository.UserRepository;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
@@ -13,6 +14,7 @@ import com.twilio.type.PhoneNumber;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,18 +27,21 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
+
+import static com.phoenixtype.lyneapp.onboarding.exception.message.ExceptionMessages.*;
 
 @Service
-public class AuthenticationService implements UserDetailsService {
+@AllArgsConstructor
+public class UserOnboardingService implements UserDetailsService {
+
+    //TODO Move exception-texts to its own class
+
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     AuthenticationManager authenticationManager;
 
-    public AuthenticationService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-    }
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -55,52 +60,62 @@ public class AuthenticationService implements UserDetailsService {
 
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
-    public void registerUser(String phoneNumber, String password) throws PhoneNumberAlreadyExistsException {
-        // Check if the user already exists and throw an exception if necessary
-        if (userRepository.existsByPhoneNumber(phoneNumber)) {
+    public void phoneNumberSignUp(YourPhoneNumberRequest yourPhoneNumberRequest) throws PhoneNumberAlreadyExistsException {
+        if (userRepository.existsByPhoneNumber(yourPhoneNumberRequest.getPhoneNumber())) {
             throw new PhoneNumberAlreadyExistsException("Phone number already registered.");
         }
-
-        // Save the new user to the database
-        String encryptedPassword = passwordEncoder.encode(password);
-        User newUser = new User();
-        newUser.setPhoneNumber(phoneNumber);
-        newUser.setPassword(encryptedPassword);
-        userRepository.save(newUser);
-
-        // Send the verification code via SMS using the Twilio API
-        sendVerificationCode(phoneNumber);
+        sendVerificationCode(yourPhoneNumberRequest.getPhoneNumber());
     }
 
-    public void verifyPhoneNumber(String phoneNumber, String verificationCode) throws InvalidVerificationCodeException {
-        // Verify the phone number and update the user's account
-        //TODO There should be a limit to how many times the user can enter a verification code
-        User user = userRepository.findByPhoneNumber(phoneNumber);
+    private void encodePassword(YourPasswordRequest yourPasswordRequest) {
+        if (yourPasswordRequest.getPassword().equals(yourPasswordRequest.getConfirmPassword())) {
+            String encryptedPassword = passwordEncoder.encode(yourPasswordRequest.getPassword());
+            Optional<User> user = userRepository.findByPhoneNumber(yourPasswordRequest.getPhoneNumber());
+            User verifiedUser = verifiedUserException(user);
 
-        if (user.getVerificationCode().equals(verificationCode)) {
-            user.setAccountEnabled(true);
-            userRepository.save(user);
+            verifiedUser.setPassword(encryptedPassword);
+            userRepository.save(verifiedUser);
+        } else {
+            throw new PasswordMismatchException(PASSWORD_MISMATCH);
+        }
+    }
+
+    static User verifiedUserException(Optional<User> user) {
+        return user.orElseThrow(() -> new PhoneNumberNotFoundException(PHONE_NUMBER_DOES_NOT_EXIST));
+    }
+
+    public void verifyPhoneNumber(VerifyPhoneNumberRequest verifyPhoneNumberRequest) throws InvalidVerificationCodeException {
+        //TODO Verify the phone number and update the user's account
+        //TODO There should be a limit to how many times the user can enter a verification code
+        Optional<User> user = userRepository.findByPhoneNumber(verifyPhoneNumberRequest.getVerificationCode());
+        User verifiedUser = user.orElseThrow(() -> new NoVerificationCodeFoundException(NO_VERIFICATION_CODE_FOUND + verifyPhoneNumberRequest.getPhoneNumber()));
+
+        if (verifiedUser.getVerificationCode().equals(verifyPhoneNumberRequest.getVerificationCode())) {
+            verifiedUser.setAccountEnabled(true);
+            userRepository.save(verifiedUser);
         } else {
             throw new InvalidVerificationCodeException("Invalid verification code.");
         }
     }
 
-    public String loginUser(String phoneNumber, String password) throws PasswordMismatchException, AccountNotEnabledException {
+
+    public String loginUser(UserLoginRequest userLoginRequest) throws PasswordMismatchException, AccountNotEnabledException {
         // Find the user by phone number and check if the account is enabled
         //TODO password matches, then ...
 
-        User user = userRepository.findByPhoneNumber(phoneNumber);
+        Optional<User> user = userRepository.findByPhoneNumber(userLoginRequest.getPhoneNumber());
+        User verifiedUser = verifiedUserException(user);
 
-        if (!user.isAccountEnabled()) {
-            throw new AccountNotEnabledException("Account not enabled. Please verify your phone number.");
+        if (!verifiedUser.isAccountEnabled()) {
+            throw new AccountNotEnabledException(ACCOUNT_NOT_ENABLED);
         }
 
         // Compare the provided password with the stored one
-        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
+        if (!passwordEncoder.matches(userLoginRequest.getPassword(), verifiedUser.getPasswordHash())) {
             throw new PasswordMismatchException("Invalid password.");
         }
 
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(phoneNumber, password));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginRequest.getPhoneNumber(), userLoginRequest.getPassword()));
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return generateJwtToken(userDetails);
@@ -163,10 +178,12 @@ public class AuthenticationService implements UserDetailsService {
                         "Your LYNE verification code is: " + verificationCode)
                 .create();
 
-        // Store the verification code in the user's account
-        User user = userRepository.findByPhoneNumber(phoneNumber);
-        user.setVerificationCode(verificationCode);
-        userRepository.save(user);
+        // Store the verification code in the (DB) user's account
+        Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);
+        User verifiedUser = verifiedUserException(user);
+
+        verifiedUser.setVerificationCode(verificationCode);
+        userRepository.save(verifiedUser);
     }
 
     private String generateVerificationCode() {
@@ -177,14 +194,11 @@ public class AuthenticationService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
         // Find the user by phone number
-        User user = userRepository.findByPhoneNumber(phoneNumber);
+        Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);
+        User verifiedUser = verifiedUserException(user);
 
-        // If the user is not found, throw a UsernameNotFoundException
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with phone number: " + phoneNumber);
-        }
 
         // Convert the User object to a Spring Security UserDetails object and return it
-        return UserPrincipal.create(user);
+        return UserPrincipal.create(verifiedUser);
     }
 }
