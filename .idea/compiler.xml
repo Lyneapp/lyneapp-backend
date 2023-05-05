@@ -10,13 +10,9 @@
         <module name="lyneapp-backend" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="lyneapp" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="lyneapp" options="-parameters" />
       <module name="lyneapp-backend" options="-parameters" />
     </option>
   </component>
