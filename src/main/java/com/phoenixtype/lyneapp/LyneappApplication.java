@@ -5,18 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @SpringBootApplication
 public class LyneappApplication {
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(LyneappApplication.class, args);
-	}
-
-	@GetMapping("/get")
-	public String getEndpoint(){
-		return "get endpoint test";
 	}
 
 }

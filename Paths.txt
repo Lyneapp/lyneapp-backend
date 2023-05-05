@@ -1,0 +1,95 @@
+________________
+NEW USER PATH
+________________
+
+## Click on the "create account" button then it ...
+## Displays the "What is your phone number" screen, user enters valid phone number
+## Click the "Continue" button (CTA) to call the "/create_account" endpoint,
+   verify that the phone number is available and send an OTP to the phone number provided.
+   Give 30 seconds before the OTP expires and allow the user 9 (nine) attempts
+   before temporarily locking the account (SOFTLOCK) for 25 minutes if the wrong OTP is entered
+   after 20 (twenty) accumulated attempts with the OTP it then lock the account permanently
+   (HARDLOCK) - user will contact lyne to have the account unlocked.
+   If the phone number is invalid overlay - "invlaid phone number"
+   If the phone number has been used overlay - "This phone number has been taken"
+
+## After clicking continue, it overlays - "verification code sent"
+    then the "Enter your verification code" screen is displayed
+    and prompts the use to enter the verification code sent to the phone number provided,
+    user clicks on the "verify" button (CTA) and if the OTP is correct, overlay - "account verified"
+    and display the "what is your name?" screen
+
+## User enters firstname and last name and click continue to display the "what is your email address?" screen
+## User enters email and clicks continue to display the "what is your birthday?" screen
+## User enters birthday, day, month year and user needs to be 18 years or older at the time of filling the form and
+    clicks continue to display the "where are you located?" screen.
+## User enters current location (collect unique id, longitude, latitude and timestamp as a location object)
+    or use a mondoDB location library, we'll need to get the user's City and Country in the UI
+    and save that as a mongoDB geospatial index to be facilitate the recommendation algorithm.
+    click continue to display the "Where is your place of birth?" screen.
+    (May use String - City and Country for now - just find a drop down for Country and Cities globally).
+
+## User enters the collects City and Country where they where born
+    and click continue to display the "what is your gender?" screen.
+
+## User selects Male or Female in the "what is your gender" screen
+    and click continue to display the "what is your height?" screen.
+
+## User selects height from the dropdown,
+    click on the "Show my height on my profile" to show height on profile
+    and click continue to display the "what is your tribe?" screen
+    or click skip to skip this question and go to the next
+
+## User selects tribe from the dropdown,
+    click on the "Show my tribe on my profile" to show tribe on profile
+    and click continue to display the "do you drink?" screen
+    or click skip to skip this question and go to the next
+
+## User selects yes or no,
+    and click continue to display the "do you smoke?" screen
+    or click skip to skip this question and go to the next
+
+## User selects yes or no,
+    and click continue to display the "What is your religion?" screen
+    or click skip to skip this question and go to the next
+
+## User selects Religion from the dropdown,
+    and click continue and it shows a field to enter the denomination (this is optional)
+     and click continue to display the "Do you have children?" screen
+     or click skip to skip this question and go to the next
+
+## User selects yes or no,
+     and click continue to display the "What do you do?" screen
+     or click skip to skip this question and go to the next
+
+## User enters Occupation and Industry in the respective fields,
+      and click continue to display the "What is the highest level of education you attained?" screen
+      or click skip to skip this question and go to the next
+
+## User enters Highest level of education and School name in the respective fields,
+      and click continue to display the "What language do you speak?" screen
+      or click skip to skip this question and go to the next
+
+## User enters languages spoken from a list of languages,
+      and click continue to display the "What are you interested in?" screen
+      or click skip to skip this question and go to the next
+
+## User selects a list of interests from a list,
+      and click continue to display the "Pick your videos and photos?" screen
+      or click skip to skip this question and go to the next
+
+## User uploads upto 5 photos and one video,
+      and click continue to display the "Tell us about you?" screen
+      or click skip to skip this question and go to the next
+
+## User enters a short blurb with a maximum size of 128 character,
+      and click continue to display the "Write your profile prompts answers?" screen
+      or click skip to skip this question and go to the next
+
+## User can enter 3 (three) sets of items (a question from a dropdown,
+      and provide a short blurb with a maximum of 128 characters)
+      and click continue to display the "Create Password" screen
+
+## User enters a string in the password and confirm password fields,
+    the passwords needs to match and also meet the standard password policy and clicks on the create account button.
+    and displays the "Profile completed" screen
