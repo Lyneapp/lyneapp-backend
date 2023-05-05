@@ -82,6 +82,7 @@ public class User implements UserDetails {
     private LocalDate dateOfBirth;
 
     private boolean accountEnabled;
+    private boolean userIsVerified;
     private boolean doYouHaveChildren;
     private boolean doYouDrink;
     private boolean doYouSmoke;

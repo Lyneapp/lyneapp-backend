@@ -62,8 +62,13 @@ public class UserOnboardingService implements UserDetailsService {
 
     public void phoneNumberSignUp(YourPhoneNumberRequest yourPhoneNumberRequest) throws PhoneNumberAlreadyExistsException {
         if (userRepository.existsByPhoneNumber(yourPhoneNumberRequest.getPhoneNumber())) {
-            throw new PhoneNumberAlreadyExistsException("Phone number already registered.");
+            throw new PhoneNumberAlreadyExistsException(PHONE_NUMBER_ALREADY_EXIST);
         }
+
+        User user = new User();
+        user.setPhoneNumber(yourPhoneNumberRequest.getPhoneNumber());
+        userRepository.save(user);
+
         sendVerificationCode(yourPhoneNumberRequest.getPhoneNumber());
     }
 
@@ -87,7 +92,7 @@ public class UserOnboardingService implements UserDetailsService {
     public void verifyPhoneNumber(VerifyPhoneNumberRequest verifyPhoneNumberRequest) throws InvalidVerificationCodeException {
         //TODO Verify the phone number and update the user's account
         //TODO There should be a limit to how many times the user can enter a verification code
-        Optional<User> user = userRepository.findByPhoneNumber(verifyPhoneNumberRequest.getVerificationCode());
+        Optional<User> user = userRepository.findByPhoneVerificationCode(verifyPhoneNumberRequest.getVerificationCode());
         User verifiedUser = user.orElseThrow(() -> new NoVerificationCodeFoundException(NO_VERIFICATION_CODE_FOUND + verifyPhoneNumberRequest.getPhoneNumber()));
 
         if (verifiedUser.getVerificationCode().equals(verifyPhoneNumberRequest.getVerificationCode())) {
@@ -173,10 +178,7 @@ public class UserOnboardingService implements UserDetailsService {
 
         String verificationCode = generateVerificationCode();
 
-        Message.creator(new PhoneNumber(phoneNumber),
-                        new PhoneNumber(twilioPhoneNumber),
-                        "Your LYNE verification code is: " + verificationCode)
-                .create();
+        Message.creator(new PhoneNumber(phoneNumber), new PhoneNumber(twilioPhoneNumber), "Your LYNE verification code is: " + verificationCode).create();
 
         // Store the verification code in the (DB) user's account
         Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);

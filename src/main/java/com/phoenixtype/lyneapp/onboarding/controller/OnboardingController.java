@@ -38,16 +38,19 @@ public class OnboardingController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping(path = "user_login")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody UserLoginRequest userLoginRequest) {
-        userOnboardingService.loginUser(userLoginRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-    
+
     @PostMapping(path = "upload_media", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadMedia(@RequestBody List<MediaFile> mediaFiles) {
         // Process the uploaded media files here
 
         return new ResponseEntity<>(MEDIA_FILES_UPLOADED, HttpStatus.OK);
     }
+
+
+    @PostMapping(path = "user_login")
+    public ResponseEntity<?> loginUser(@Valid @RequestBody UserLoginRequest userLoginRequest) {
+        userOnboardingService.loginUser(userLoginRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

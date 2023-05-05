@@ -11,15 +11,16 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Component
+@Validated
 @Data
 @Builder
-@Validated
+@AllArgsConstructor
+@NoArgsConstructor
 public class YourPhoneNumberRequest {
     @NotBlank(message = "Phone number cannot be blank.")
-    @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$")
-    @Size(max = 15)
+    @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Invalid phone number")
+    @Size(max = 15, message = "Phone number cannot exceed 15 characters.")
     private String phoneNumber;
 }

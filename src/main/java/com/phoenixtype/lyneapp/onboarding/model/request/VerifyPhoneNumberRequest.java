@@ -30,5 +30,5 @@ public class VerifyPhoneNumberRequest {
     @Size(min = 6, max = 6)
     private String verificationCode;
 
-    private boolean isVerified;
+    private boolean userIsVerified;
 }
