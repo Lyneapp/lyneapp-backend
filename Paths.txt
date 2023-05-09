@@ -7,11 +7,14 @@ ________________
 ## Click the "Continue" button (CTA) to call the "/create_account" endpoint,
    verify that the phone number is available and send an OTP to the phone number provided.
    Give 30 seconds before the OTP expires and allow the user 9 (nine) attempts
-   before temporarily locking the account (SOFTLOCK) for 25 minutes if the wrong OTP is entered
+   before temporarily locking the account (SOFT_LOCK) for 25 minutes if the wrong OTP is entered
    after 20 (twenty) accumulated attempts with the OTP it then lock the account permanently
-   (HARDLOCK) - user will contact lyne to have the account unlocked.
-   If the phone number is invalid overlay - "invlaid phone number"
+   (HARD_LOCK) - user will contact lyne to have the account unlocked.
+   If the phone number is invalid overlay - "invalid phone number"
    If the phone number has been used overlay - "This phone number has been taken"
+
+   ```failedAttemptCount = 9
+
 
 ## After clicking continue, it overlays - "verification code sent"
     then the "Enter your verification code" screen is displayed
@@ -24,12 +27,12 @@ ________________
 ## User enters birthday, day, month year and user needs to be 18 years or older at the time of filling the form and
     clicks continue to display the "where are you located?" screen.
 ## User enters current location (collect unique id, longitude, latitude and timestamp as a location object)
-    or use a mondoDB location library, we'll need to get the user's City and Country in the UI
-    and save that as a mongoDB geospatial index to be facilitate the recommendation algorithm.
+    or use a mongoDB location library, we'll need to get the user's City and Country in the UI
+    and save that as a mongoDB geospatial index to be facilitated the recommendation algorithm.
     click continue to display the "Where is your place of birth?" screen.
-    (May use String - City and Country for now - just find a drop down for Country and Cities globally).
+    (May use String - City and Country for now - just find a drop-down for Country and Cities globally).
 
-## User enters the collects City and Country where they where born
+## User enters the collects City and Country where they were born
     and click continue to display the "what is your gender?" screen.
 
 ## User selects Male or Female in the "what is your gender" screen
@@ -54,7 +57,7 @@ ________________
     or click skip to skip this question and go to the next
 
 ## User selects Religion from the dropdown,
-    and click continue and it shows a field to enter the denomination (this is optional)
+    and click continue, and it shows a field to enter the denomination (this is optional)
      and click continue to display the "Do you have children?" screen
      or click skip to skip this question and go to the next
 

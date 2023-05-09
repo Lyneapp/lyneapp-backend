@@ -1,0 +1,411 @@
+[
+  {
+  "phoneNumber": "+123456789",
+  "yourName": {
+    "firstName": "John",
+    "middleName": "",
+    "lastName": "Doe"
+  },
+  "yourPhoneNumber": "+987654321",
+  "yourEmailAddress": "johndoe@example.com",
+  "yourDateOfBirth": "1990-01-01",
+  "yourCurrentLocation": {
+    "latitude": 12.345,
+    "longitude": 67.890,
+    "city": "New York",
+    "country": "USA"
+  },
+  "yourPlaceOfBirthlocation": {
+    "latitude": 34.567,
+    "longitude": 89.012,
+    "city": "London",
+    "country": "UK"
+  },
+  "yourGender": "Male",
+  "yourHeight": "6'1\"",
+  "yourTribe": "",
+  "doYouDrink": false,
+  "doYouSmoke": true,
+  "yourReligion": "Christian",
+  "doYouHaveChildren": false,
+  "yourOccupation": {
+    "title": "Software Engineer",
+    "company": "XYZ Corp",
+    "startDate": "2022-01-01"
+  },
+  "yourQualification": {
+    "degree": "Bachelor of Science",
+    "major": "Computer Science",
+    "university": "ABC University",
+    "year": 2015
+  },
+  "yourLanguages": ["English", "Spanish", "French"],
+  "yourInterests": ["Reading", "Traveling", "Cooking"],
+  "aboutYou": "I am a software engineer who loves to read and travel.",
+  "prompts": [
+    {
+      "question": "What is your favorite book?",
+      "answer": "My favorite book is 'To Kill a Mockingbird' by Harper Lee."
+    },
+    {
+      "question": "What is your favorite travel destination?",
+      "answer": "My favorite travel destination is Paris, France."
+    }
+  ]
+},
+  {
+    "yourName": "John Doe",
+    "yourPhoneNumber": "+1234567890",
+    "yourEmailAddress": "johndoe@example.com",
+    "yourDateOfBirth": "1990-01-01",
+    "yourCurrentLocation": "New York",
+    "yourPlaceOfBirthLocation": "Los Angeles",
+    "yourGender": "Male",
+    "yourHeight": "5'10\"",
+    "yourTribe": "Igbo",
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "yourReligion": "Christianity",
+    "doYouHaveChildren": false,
+    "yourOccupation": "Software Engineer",
+    "yourQualification": "Bachelor's Degree",
+    "yourLanguages": ["English", "Spanish", "French"],
+    "yourInterests": ["Reading", "Traveling", "Photography"],
+    "aboutYou": "I am a software engineer with a passion for photography and traveling.",
+    "prompts": [
+      {
+        "prompt": "What are your hobbies?",
+        "answer": "My hobbies include reading, traveling, and photography."
+      },
+      {
+        "prompt": "What are your career goals?",
+        "answer": "My career goal is to become a senior software engineer and lead a team of developers."
+      }
+    ]
+  },
+  {
+    "yourName": "",
+    "yourPhoneNumber": "+1234",
+    "yourEmailAddress": "",
+    "yourDateOfBirth": "",
+    "yourCurrentLocation": "",
+    "yourPlaceOfBirthLocation": "",
+    "yourGender": "",
+    "yourHeight": "",
+    "yourTribe": "",
+    "doYouDrink": null,
+    "doYouSmoke": null,
+    "yourReligion": "",
+    "doYouHaveChildren": null,
+    "yourOccupation": "",
+    "yourQualification": "",
+    "yourLanguages": [],
+    "yourInterests": [],
+    "aboutYou": "",
+    "prompts": [
+      {
+        "prompt": "",
+        "answer": ""
+      }
+    ]
+  },
+  {
+    "yourName": "John Doe",
+    "yourPhoneNumber": "+1234",
+    "yourEmailAddress": "johndoe",
+    "yourDateOfBirth": "2025-01-01",
+    "yourCurrentLocation": "",
+    "yourPlaceOfBirthLocation": "",
+    "yourGender": "M",
+    "yourHeight": "6 feet",
+    "yourTribe": "12345",
+    "doYouDrink": "true",
+    "doYouSmoke": "false",
+    "yourReligion": "Atheism",
+    "doYouHaveChildren": "no",
+    "yourOccupation": "",
+    "yourQualification": "",
+    "yourLanguages": ["English", 123, "Spanish"],
+    "yourInterests": ["Reading", "", "Photography"],
+    "aboutYou": "I am a software engineer with a passion for photography and traveling. I am also an avid reader.",
+    "prompts": [
+      {
+        "prompt": "",
+        "answer": ""
+      },
+      {
+        "prompt": "What are your career goals?",
+        "answer": "My career goal is to become a senior software engineer and lead a team of developers. I also want to develop my skills in data analysis and machine learning."
+      },
+      {
+        "prompt": "What is your favorite book?",
+        "answer": "My favorite book is 'The Hitchhiker's Guide to the Galaxy' by Douglas Adams."
+      },
+      {
+        "prompt": "What is your favorite travel destination?",
+        "answer": "My favorite travel destination is Japan."
+      }
+    ]
+  },
+  {
+    "yourName": {
+      "firstName": "Jane",
+      "middleName": "",
+      "lastName": "Doe"
+    },
+    "yourPhoneNumber": "+1234567890",
+    "yourEmailAddress": "jane.doe@example.com",
+    "yourDateOfBirth": "1995-01-01",
+    "yourCurrentLocation": {
+      "city": "New York",
+      "state": "New York",
+      "country": "United States"
+    },
+    "yourPlaceOfBirthLocation": {
+      "city": "Los Angeles",
+      "state": "California",
+      "country": "United States"
+    },
+    "yourGender": "Female",
+    "yourHeight": "5'6\"",
+    "yourTribe": "Igbo",
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "yourReligion": "Christianity",
+    "doYouHaveChildren": false,
+    "yourOccupation": {
+      "title": "Software Engineer",
+      "company": "Example Inc.",
+      "location": {
+        "city": "San Francisco",
+        "state": "California",
+        "country": "United States"
+      }
+    },
+    "yourQualification": {
+      "degree": "Bachelor of Science",
+      "major": "Computer Science",
+      "university": "Stanford University",
+      "graduationYear": "2017"
+    },
+    "yourLanguages": ["English", "Spanish"],
+    "yourInterests": ["Reading", "Photography"],
+    "aboutYou": "I am a software engineer with a passion for photography and traveling. I am also an avid reader.",
+    "prompts": [
+      {
+        "prompt": "What are your career goals?",
+        "answer": "My career goal is to become a senior software engineer and lead a team of developers. I also want to develop my skills in data analysis and machine learning."
+      },
+      {
+        "prompt": "What is your favorite book?",
+        "answer": "My favorite book is 'The Hitchhiker's Guide to the Galaxy' by Douglas Adams."
+      }
+    ]
+  },
+  {
+    "yourName": {
+      "firstName": "John",
+      "middleName": "Henry",
+      "lastName": "Doe"
+    },
+    "yourPhoneNumber": "+14155552671",
+    "yourEmailAddress": "john.doe@example.com",
+    "yourDateOfBirth": "1980-05-20",
+    "yourCurrentLocation": {
+      "city": "Austin",
+      "state": "Texas",
+      "country": "United States"
+    },
+    "yourPlaceOfBirthLocation": {
+      "city": "Chicago",
+      "state": "Illinois",
+      "country": "United States"
+    },
+    "yourGender": "Male",
+    "yourHeight": "6'0\"",
+    "yourTribe": "Cherokee",
+    "doYouDrink": true,
+    "doYouSmoke": true,
+    "yourReligion": "Agnostic",
+    "doYouHaveChildren": true,
+    "yourOccupation": {
+      "title": "Marketing Manager",
+      "company": "Example Inc.",
+      "location": {
+        "city": "Los Angeles",
+        "state": "California",
+        "country": "United States"
+      }
+    },
+    "yourQualification": {
+      "degree": "Bachelor of Arts",
+      "major": "Marketing",
+      "university": "University of Texas at Austin",
+      "graduationYear": "2002"
+    },
+    "yourLanguages": ["English", "Spanish", "Cherokee"],
+    "yourInterests": ["Hiking", "Playing Guitar"],
+    "aboutYou": "I am a marketing professional with a love for the outdoors and music. I also enjoy spending time with my family and friends.",
+    "prompts": [
+      {
+        "prompt": "What is your favorite outdoor activity?",
+        "answer": "My favorite outdoor activity is hiking. I love exploring new trails and taking in the beautiful scenery."
+      },
+      {
+        "prompt": "What is your favorite type of music?",
+        "answer": "I enjoy playing and listening to a variety of music, but my favorite is classic rock."
+      },
+      {
+        "prompt": "What are your long-term career goals?",
+        "answer": "My long-term career goal is to become a CMO and lead a marketing team at a major company."
+      }
+    ]
+  },
+  {
+    "yourName": {
+      "firstName": "Emma",
+      "middleName": "Marie",
+      "lastName": "Smith"
+    },
+    "yourPhoneNumber": "+447912345678",
+    "yourEmailAddress": "emma.smith@example.com",
+    "yourDateOfBirth": "1995-02-15",
+    "yourCurrentLocation": {
+      "city": "London",
+      "country": "United Kingdom"
+    },
+    "yourPlaceOfBirthLocation": {
+      "city": "Manchester",
+      "country": "United Kingdom"
+    },
+    "yourGender": "Female",
+    "yourHeight": "5'6\"",
+    "yourTribe": "British",
+    "doYouDrink": false,
+    "doYouSmoke": false,
+    "yourReligion": "None",
+    "doYouHaveChildren": false,
+    "yourOccupation": {
+      "title": "Software Engineer",
+      "company": "Example Ltd.",
+      "location": {
+        "city": "London",
+        "country": "United Kingdom"
+      }
+    },
+    "yourQualification": {
+      "degree": "Bachelor of Science",
+      "major": "Computer Science",
+      "university": "University of Cambridge",
+      "graduationYear": "2017"
+    },
+    "yourLanguages": ["English", "French"],
+    "yourInterests": ["Traveling", "Reading"],
+    "aboutYou": "I am a software engineer who loves to travel and explore new cultures. In my free time, I enjoy reading books and going for walks.",
+    "prompts": [
+      {
+        "prompt": "What is your favorite travel destination?",
+        "answer": "My favorite travel destination is Japan. I love the culture, the food, and the scenery."
+      },
+      {
+        "prompt": "What book are you currently reading?",
+        "answer": "I am currently reading 'The Nightingale' by Kristin Hannah."
+      }
+    ]
+  },
+  {
+    "yourName": {
+      "firstName": "Juan",
+      "middleName": "Carlos",
+      "lastName": "Garcia"
+    },
+    "yourPhoneNumber": "+529981234567",
+    "yourEmailAddress": "jcgarcia@example.com",
+    "yourDateOfBirth": "1988-09-20",
+    "yourCurrentLocation": {
+      "city": "Mexico City",
+      "country": "Mexico"
+    },
+    "yourPlaceOfBirthLocation": {
+      "city": "Guadalajara",
+      "country": "Mexico"
+    },
+    "yourGender": "Male",
+    "yourHeight": "5'9\"",
+    "yourTribe": "Mexican",
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "yourReligion": "Catholic",
+    "doYouHaveChildren": true,
+    "yourOccupation": {
+      "title": "Marketing Manager",
+      "company": "Acme Inc.",
+      "location": {
+        "city": "Mexico City",
+        "country": "Mexico"
+      }
+    },
+    "yourQualification": {
+      "degree": "Master of Business Administration",
+      "major": "Marketing",
+      "university": "Harvard University",
+      "graduationYear": "2012"
+    },
+    "yourLanguages": ["Spanish", "English"],
+    "yourInterests": ["Football", "Movies"],
+    "aboutYou": "I am a marketing manager who is passionate about football and loves to watch movies in my free time.",
+    "prompts": [
+      {
+        "prompt": "What is your favorite football team?",
+        "answer": "My favorite football team is Chivas de Guadalajara."
+      },
+      {
+        "prompt": "What is your favorite movie?",
+        "answer": "My favorite movie is The Godfather."
+      },
+      {
+        "prompt": "What is the best marketing campaign you have worked on?",
+        "answer": "The best marketing campaign I have worked on was a digital campaign for a new product launch that resulted in a 30% increase in sales."
+      }
+    ]
+  },
+  {
+    "yourName": {
+      "firstName": "",
+      "middleName": "",
+      "lastName": ""
+    },
+    "yourPhoneNumber": "+1-123-456-7890",
+    "yourEmailAddress": "johnexample.com",
+    "yourDateOfBirth": "",
+    "yourCurrentLocation": {},
+    "yourPlaceOfBirthLocation": {},
+    "yourGender": "",
+    "yourHeight": "",
+    "yourTribe": "",
+    "doYouDrink": null,
+    "doYouSmoke": null,
+    "yourReligion": "",
+    "doYouHaveChildren": null,
+    "yourOccupation": {},
+    "yourQualification": {},
+    "yourLanguages": [],
+    "yourInterests": [],
+    "aboutYou": "",
+    "prompts": [
+      {
+        "prompt": "",
+        "answer": ""
+      }
+    ]
+  }
+
+]
+
+
+
+
+
+
+
+
