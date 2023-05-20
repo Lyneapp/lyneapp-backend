@@ -1,0 +1,6 @@
+1. Load the number of available recommendations profile for the user's daily upper limit (say 15) for free tier
+and load 4 times that for premium user and when the count decrements to fifteen trigger loading another 15 or less depending on what is left in the pool.
+
+2. When I collect the phone number, I will assign the user a random password and generate a token from that password for the request of the onboarding flow
+(user does not need to know).
+I will finally overwrite the password during the set password screen and ask the user to sign in.

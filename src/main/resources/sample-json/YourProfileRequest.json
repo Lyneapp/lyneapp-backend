@@ -1,0 +1,51 @@
+{
+  "phoneNumber": "+16475706079",
+  "name": {
+    "firstName": "John",
+    "lastName": "Doe"
+  },
+  "mailAddress": "lyneapp.dev@gmail.com",
+  "dateOfBirth": "1990-01-01",
+  "currentLocation": {
+    "latitude": 12.345,
+    "longitude": 67.890,
+    "city": "New York",
+    "country": "USA"
+  },
+  "placeOfBirthLocation": {
+    "latitude": 34.567,
+    "longitude": 89.012,
+    "city": "London",
+    "country": "UK"
+  },
+  "gender": "Male",
+  "height": "6'1",
+  "tribe": ["Igbo", "Hausa-Ibibio", "Fulani-Hausa"],
+  "doYouDrink": false,
+  "doYouSmoke": true,
+  "religion": "Christian",
+  "doYouHaveChildren": false,
+  "occupation": {
+    "job": "Software Engineer",
+    "industry": "Information Technology"
+  },
+  "qualification": {
+    "highestDegree": "Bachelor of Science",
+    "institutionName": "ABC University"
+  },
+  "languages": ["English", "Spanish", "French"],
+  "interests": ["Reading", "Traveling", "Cooking"],
+  "aboutYou": "I am a software engineer who loves to read and travel.",
+  "prompts": [
+    {
+      "promptID": "14",
+      "promptQuestion": "What is your favorite book?",
+      "promptResponse": "My favorite book is 'To Kill a Mockingbird' by Harper Lee."
+    },
+    {
+      "promptID": "17",
+      "promptQuestion": "What is your favorite travel destination?",
+      "promptResponse": "My favorite travel destination is Paris, France."
+    }
+  ]
+}

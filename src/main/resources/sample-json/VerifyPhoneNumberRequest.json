@@ -1,0 +1,22 @@
+[
+  {
+    "phoneNumber": "+12345678901234",
+    "verificationCode": "123456",
+    "userIsVerified": true
+  },
+  {
+    "phoneNumber": "+23456789012345",
+    "verificationCode": "654321",
+    "userIsVerified": false
+  },
+  {
+    "phoneNumber": "+11234567890123",
+    "verificationCode": "000000",
+    "userIsVerified": true
+  },
+  {
+    "phoneNumber": "",
+    "verificationCode": "",
+    "userIsVerified": null
+  }
+]

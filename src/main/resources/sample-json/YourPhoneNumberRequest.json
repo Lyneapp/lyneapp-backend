@@ -1,0 +1,12 @@
+[
+  {
+    "phoneNumber": "+12345678901234"
+  },
+  {
+    "phoneNumber": "+123abc"
+  },
+  {
+    "phoneNumber": ""
+  }
+]
+
