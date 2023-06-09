@@ -1,0 +1,43 @@
+[
+  {
+
+    "USER_ID": "+16475706079",
+    "ITEM_ID": "+16474555542",
+    "TIMESTAMP": "2023-05-26T10:00:00Z",
+    "RECOMMENDATION_ID": 1,
+    "EVENT_TYPE": {
+      "MATCHED": true,
+      "LIKED_BY_USER_ID": true,
+      "LIKED_BY_ITEM_ID": true,
+      "SENT_MESSAGE": true,
+      "RECEIVED_MESSAGE": true,
+      "SENT_MESSAGE_WEIGHT": 2,
+      "RECEIVED_MESSAGE_WEIGHT": 1,
+      "SENT_BOUQUET": true,
+      "RECEIVED_BOUQUET": false,
+      "SENT_BOUQUET_WEIGHT": 2,
+      "RECEIVED_BOUQUET_WEIGHT": 0,
+      "NEXT_LEVEL": false
+    }
+  },
+  {
+    "USER_ID": "+16475706076",
+    "ITEM_ID": "+16474555543",
+    "MATCHED": false,
+    "TIMESTAMP": "2023-05-26T10:10:00Z",
+    "RECOMMENDATION_ID": 2,
+    "EVENT_TYPE": {
+      "LIKED_BY_USER_ID": false,
+      "LIKED_BY_ITEM_ID": false,
+      "SENT_MESSAGE": false,
+      "RECEIVED_MESSAGE": false,
+      "SENT_MESSAGE_WEIGHT": 0,
+      "RECEIVED_MESSAGE_WEIGHT": 0,
+      "SENT_BOUQUET": false,
+      "RECEIVED_BOUQUET": false,
+      "SENT_BOUQUET_WEIGHT": 0,
+      "RECEIVED_BOUQUET_WEIGHT": 0,
+      "NEXT_LEVEL": false
+    }
+  }
+]

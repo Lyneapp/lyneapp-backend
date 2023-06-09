@@ -1,0 +1,18 @@
+[
+  {
+    "GENDER": "Male",
+    "TRIBE": "Igbo",
+    "AGE": "30",
+    "HEIGHT": "177",
+    "RELIGION": "Christian",
+    "LOCATION": "Toronto",
+    "INTERESTS": "Reading, Fitness",
+    "LANGUAGES": "English, Yoruba",
+    "QUALIFICATION": "Master's",
+    "OCCUPATION": "Doctor",
+    "DO_YOU_DRINK": false,
+    "DO_YOU_SMOKE": false,
+    "DO_YOU_HAVE_CHILDREN": false,
+    "ACCOUNT_VERIFIED_BADGE": true
+  }
+]

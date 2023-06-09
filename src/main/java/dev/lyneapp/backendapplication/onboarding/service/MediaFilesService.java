@@ -3,13 +3,13 @@ package dev.lyneapp.backendapplication.onboarding.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.mongodb.client.result.UpdateResult;
-import dev.lyneapp.backendapplication.onboarding.model.User;
+import dev.lyneapp.backendapplication.common.model.User;
 import dev.lyneapp.backendapplication.onboarding.model.request.DeleteMediaFilesRequest;
 import dev.lyneapp.backendapplication.onboarding.model.request.GetMediaFilesRequest;
 import dev.lyneapp.backendapplication.onboarding.model.request.UploadMediaFilesRequest;
-import dev.lyneapp.backendapplication.onboarding.repository.UserRepository;
-import dev.lyneapp.backendapplication.onboarding.util.exception.UploadFailedException;
-import dev.lyneapp.backendapplication.onboarding.util.exception.UserNotFoundException;
+import dev.lyneapp.backendapplication.common.repository.UserRepository;
+import dev.lyneapp.backendapplication.common.util.exception.UploadFailedException;
+import dev.lyneapp.backendapplication.common.util.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,25 +27,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static dev.lyneapp.backendapplication.onboarding.util.VerifyUser.verifyPhoneNumberExist;
-import static dev.lyneapp.backendapplication.onboarding.util.exception.ExceptionMessages.FAILED_TO_UPLOAD_IMAGE_S3;
-import static dev.lyneapp.backendapplication.onboarding.util.exception.ExceptionMessages.USER_NOT_FOUND_WITH_ID;
+import static dev.lyneapp.backendapplication.common.util.Validation.verifyPhoneNumberExist;
+import static dev.lyneapp.backendapplication.common.util.exception.ExceptionMessages.FAILED_TO_UPLOAD_IMAGE_S3;
+import static dev.lyneapp.backendapplication.common.util.exception.ExceptionMessages.USER_NOT_FOUND_WITH_ID;
 
 
 @Service
 @RequiredArgsConstructor
 public class MediaFilesService {
     private final static Logger LOGGER = LoggerFactory.getLogger(MediaFilesService.class);
-
+    private final UserRepository userRepository;
+    private final AmazonS3 s3Client;
+    private final MongoTemplate mongoTemplate;
     @Value("${aws_s3_media_bucket}")
     private String awsS3MediaBucket;
     @Value("${amazonaws.com}")
     private String amazonawsDotCom;
-
-    private final UserRepository userRepository;
-    private final AmazonS3 s3Client;
-    private final MongoTemplate mongoTemplate;
-
 
     public void uploadMediaFiles(MultipartFile[] mediaFiles, UploadMediaFilesRequest uploadMediaFilesRequest) {
         Optional<User> user = userRepository.findByUserPhoneNumber(uploadMediaFilesRequest.getUserPhoneNumber());

@@ -1,20 +1,25 @@
 package dev.lyneapp.backendapplication.onboarding.service;
 
+import com.amazonaws.services.cloudcontrolapi.model.InvalidCredentialsException;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.SendTemplatedEmailRequest;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
-import dev.lyneapp.backendapplication.onboarding.model.ConfirmationToken;
-import dev.lyneapp.backendapplication.onboarding.model.PhoneNumberLookUpData;
-import dev.lyneapp.backendapplication.onboarding.model.Preference;
-import dev.lyneapp.backendapplication.onboarding.model.User;
+import dev.lyneapp.backendapplication.common.model.UserPreference;
+import dev.lyneapp.backendapplication.common.model.User;
+import dev.lyneapp.backendapplication.common.util.exception.*;
+import dev.lyneapp.backendapplication.onboarding.model.*;
+import dev.lyneapp.backendapplication.onboarding.model.enums.TokenType;
 import dev.lyneapp.backendapplication.onboarding.model.request.*;
 import dev.lyneapp.backendapplication.onboarding.model.response.*;
 import dev.lyneapp.backendapplication.onboarding.repository.ConfirmationTokenRepository;
-import dev.lyneapp.backendapplication.onboarding.repository.UserRepository;
-import dev.lyneapp.backendapplication.onboarding.util.exception.*;
+import dev.lyneapp.backendapplication.onboarding.repository.JwtTokenRepository;
+import dev.lyneapp.backendapplication.common.repository.UserRepository;
+import dev.lyneapp.backendapplication.onboarding.model.request.ChangePhoneNumberRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,30 +32,33 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static dev.lyneapp.backendapplication.onboarding.util.VerifyUser.verifyPhoneNumberExist;
-import static dev.lyneapp.backendapplication.onboarding.util.VerifyUser.verifyTokenExist;
-import static dev.lyneapp.backendapplication.onboarding.util.exception.ExceptionMessages.*;
+import static dev.lyneapp.backendapplication.common.util.Validation.*;
+import static dev.lyneapp.backendapplication.common.util.exception.ExceptionMessages.*;
 
 // TODO and to reply to the email or contact Lyne if someone else used their email address.
+// TODO reset the verification code to null when the user completes phone number verification to prevent false double verification
+// TODO - Error handling: Handle any exceptions that might occur during the verification code sending process.
+// TODO - Phone number validation: ensure that the phone number provided is in the correct format for the country the phone number belongs to. You can use a phone number validation library or write your own phone number validation code to ensure the phone number provided is valid.
+// TODO - Storing verification code: You might want to consider storing the verification code with an expiration time, so that if the user does not verify within a certain amount of time, the verification code is no longer valid.
+// TODO - Security: You should ensure that the verification code is only accessible by the user and not visible to other users or stored in plain text.
+// TODO This implementation means if you don't verify the email it still saves to DB, how do we remove if verification fails
+// TODO Just return a string that says email confirmed, we can return a response object if we want to include more information
 
 @Service
 @RequiredArgsConstructor
 public class OnboardingService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(OnboardingService.class);
-    private static final String PHONE_NUMBER_REGEX = "^\\+?[1-9]\\d{1,14}$";
-    private static final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,20}$";
     private static final String CONFIRMED = "confirmed";
     private static final String CONFIRMATION_MESSAGE = "Please check your email to confirm your account";
-    private static final String EMAIL_SUCCESS_MESSAGE = "Email sent, kindly check your inbox";
+    private static final String VERIFICATION_MESSAGE = "Your LYNE verification code is: ";
 
     private final ConfirmationTokenRepository confirmationTokenRepository;
+    private final JwtTokenRepository jwtTokenRepository;
     private final AuthenticationManager authenticationManager;
     private final AmazonSimpleEmailService amazonSimpleEmailService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
     private final JwtService jwtService;
 
     @Value("${twilio.account.sid}")
@@ -66,123 +74,91 @@ public class OnboardingService {
     private String serverHostUrl;
 
 
-    public void phoneNumberSignUp(PhoneNumberRequest yourPhoneNumberRequest) throws PhoneNumberAlreadyExistsException {
-        boolean isValidUserPhoneNumber = yourPhoneNumberRequest.getUserPhoneNumber().matches(PHONE_NUMBER_REGEX);
-        boolean existsByUserPhoneNumber = userRepository.findByUserPhoneNumber(yourPhoneNumberRequest.getUserPhoneNumber()).isPresent();
 
-        if (!isValidUserPhoneNumber) {
-            throw new InvalidPhoneNumberException(PHONE_NUMBER_IS_INVALID + yourPhoneNumberRequest.getUserPhoneNumber());
-        }
-        if (existsByUserPhoneNumber) {
+    public void phoneNumberSignUp(PhoneNumberRequest phoneNumberRequest) throws PhoneNumberAlreadyExistsException, InvalidPhoneNumberException {
+        LOGGER.info("Entering OnboardingService.phoneNumberSignUp");
+        LOGGER.info("phoneNumberSignUp() - phoneNumberRequest: {}", phoneNumberRequest);
+        validatePhoneNumber(phoneNumberRequest.getUserPhoneNumber());
+
+        if (userRepository.findByUserPhoneNumber(phoneNumberRequest.getUserPhoneNumber()).isPresent()) {
             throw new PhoneNumberAlreadyExistsException(ExceptionMessages.PHONE_NUMBER_ALREADY_EXIST);
         }
 
         User user = new User();
-        user.setUserPhoneNumber(yourPhoneNumberRequest.getUserPhoneNumber());
+        user.setUserPhoneNumber(phoneNumberRequest.getUserPhoneNumber());
         userRepository.save(user);
 
-        sendVerificationCode(yourPhoneNumberRequest.getUserPhoneNumber());
+        sendVerificationCode(phoneNumberRequest.getUserPhoneNumber());
+        LOGGER.info("Exiting OnboardingService.phoneNumberSignUp");
     }
 
+    public void changePhoneNumber(ChangePhoneNumberRequest changePhoneNumberRequest) throws PhoneNumberAlreadyExistsException {
+        LOGGER.info("Entering OnboardingService.changePhoneNumber: " + changePhoneNumberRequest.getUserPhoneNumber() + ", " +  changePhoneNumberRequest.getNewPhoneNumber() + ", " + changePhoneNumberRequest.getConfirmNewPhoneNumber());
+        validatePhoneNumber(changePhoneNumberRequest.getUserPhoneNumber()); //regex validation
+        verifyPhoneNumberIsEqual(changePhoneNumberRequest.getNewPhoneNumber(), changePhoneNumberRequest.getConfirmNewPhoneNumber()); //confirm  new phone number
+        String newPhoneNumber = changePhoneNumberRequest.getNewPhoneNumber();
 
-    public PhoneNumberVerificationResponse verifyPhoneNumber(PhoneNumberVerificationRequest yourPhoneNumberVerificationRequest) throws InvalidVerificationCodeException {
-        // TODO There should be a limit to how many times the user can enter a verification code (what happens when you enter the wrong code X times)
-        //  TODO This should be a way to prevent users from calling the API too many times
+        Optional<User> existingUserWithNewPhoneNumber = userRepository.findByUserPhoneNumber(newPhoneNumber);
+        if (existingUserWithNewPhoneNumber.isPresent()) {
+            throw new PhoneNumberAlreadyExistsException(PHONE_NUMBER_ALREADY_EXIST);
+        }
+        User user = verifyUserByPhoneNumber(changePhoneNumberRequest.getUserPhoneNumber()); //verify user exist by phone number
+        user.setUserIsVerified(false);
+        user.setVerificationCode(null);
+        user.setUserPhoneNumber(newPhoneNumber);
+        userRepository.save(user);
 
-        Optional<User> user = userRepository.findByUserPhoneNumber(yourPhoneNumberVerificationRequest.getUserPhoneNumber());
+        sendVerificationCode(changePhoneNumberRequest.getNewPhoneNumber());
+        LOGGER.info("Exiting OnboardingService.changePhoneNumber");
+    }
+
+    public PhoneNumberVerificationResponse verifyPhoneNumber(PhoneNumberVerificationRequest phoneNumberVerificationRequest) throws InvalidVerificationCodeException {
+        LOGGER.info("Entering OnboardingService.verifyPhoneNumber");
+        Optional<User> user = userRepository.findByUserPhoneNumber(phoneNumberVerificationRequest.getUserPhoneNumber());
         User verifiedUser = verifyPhoneNumberExist(user);
 
-        if (!verifiedUser.getVerificationCode().equals(yourPhoneNumberVerificationRequest.getVerificationCode())) {
+        if (!verifiedUser.getVerificationCode().equals(phoneNumberVerificationRequest.getVerificationCode())) {
             throw new InvalidVerificationCodeException(ExceptionMessages.INVALID_VERIFICATION_CODE);
         }
 
-        com.twilio.rest.lookups.v2.PhoneNumber twilioPhoneNumber = com.twilio.rest.lookups.v2.PhoneNumber.fetcher(yourPhoneNumberVerificationRequest.getUserPhoneNumber()).fetch();
-        PhoneNumberLookUpData phoneNumberLookUpData = new PhoneNumberLookUpData();
-
-        phoneNumberLookUpData.setCallerName(twilioPhoneNumber.getCallerName());
-        phoneNumberLookUpData.setCallForwarding(twilioPhoneNumber.getCallForwarding());
-        phoneNumberLookUpData.setCountryCode(twilioPhoneNumber.getCountryCode());
-        phoneNumberLookUpData.setIdentityMatch(twilioPhoneNumber.getIdentityMatch());
-        phoneNumberLookUpData.setUrl(twilioPhoneNumber.getUrl());
-        phoneNumberLookUpData.setValid(twilioPhoneNumber.getValid());
-        phoneNumberLookUpData.setLiveActivity(twilioPhoneNumber.getLiveActivity());
-        phoneNumberLookUpData.setSimSwap(twilioPhoneNumber.getSimSwap());
-        phoneNumberLookUpData.setNationalFormat(twilioPhoneNumber.getNationalFormat());
-        phoneNumberLookUpData.setCallingCountryCode(twilioPhoneNumber.getCallingCountryCode());
-        phoneNumberLookUpData.setSmsPumpingRisk(twilioPhoneNumber.getSmsPumpingRisk());
-        phoneNumberLookUpData.setLineTypeIntelligence(twilioPhoneNumber.getLineTypeIntelligence());
-        phoneNumberLookUpData.setValidationErrors(twilioPhoneNumber.getValidationErrors());
-
-        verifiedUser.setPhoneNumberLookUpData(phoneNumberLookUpData);
+        populatePhoneNumberLookUpData(verifiedUser);
         verifiedUser.setUserIsVerified(true);
         userRepository.save(verifiedUser);
 
-        return PhoneNumberVerificationResponse
-                .builder()
+        LOGGER.info("Exiting OnboardingService.verifyPhoneNumber");
+        return PhoneNumberVerificationResponse.builder()
                 .userPhoneNumber(verifiedUser.getUserPhoneNumber())
                 .verificationCode(verifiedUser.getVerificationCode())
                 .userIsVerified(verifiedUser.isUserIsVerified())
                 .build();
     }
 
-
     public String yourEmail(SendEmailRequest sendEmailRequest) {
-        boolean isValidEmail = sendEmailRequest.getEmailAddress().matches(EMAIL_REGEX);
+        LOGGER.info("Entering OnboardingService.yourEmail");
+        validateEmail(sendEmailRequest.getEmailAddress());
 
-        if (!isValidEmail) {
-            throw new InvalidPasswordException(EMAIL_IS_INVALID);
-        }
-        Optional<User> user = userRepository.findByUserPhoneNumber(sendEmailRequest.getUserPhoneNumber());
-        User verifiedUser = verifyPhoneNumberExist(user);
+        User verifiedUser = verifyUserByPhoneNumber(sendEmailRequest.getUserPhoneNumber());
         verifiedUser.setEmailAddress(sendEmailRequest.getEmailAddress());
         userRepository.save(verifiedUser);
-        String token = UUID.randomUUID().toString();
-
-        ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), verifiedUser);
+        ConfirmationToken confirmationToken = generateConfirmationToken(verifiedUser);
         confirmationTokenRepository.save(confirmationToken);
-        String link = serverHostUrl + "/api/v1/auth/confirm_email_token?token=" + token;
+        String confirmationLink = generateConfirmationLink(confirmationToken);
 
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom(sendEmailRequest.getFromEmail());
-        simpleMailMessage.setTo(sendEmailRequest.getToEmail());
-        simpleMailMessage.setSubject(sendEmailRequest.getSubject());
-        simpleMailMessage.setText(sendEmailRequest.getBody());
-
-        Destination destination = new Destination();
-        List<String> toAddresses = new ArrayList<>();
-        String[] emails = simpleMailMessage.getTo();
-        Collections.addAll(toAddresses, Objects.requireNonNull(emails));
-        destination.setToAddresses(toAddresses);
-
-        SendTemplatedEmailRequest sendTemplatedEmailRequest = new SendTemplatedEmailRequest();
-        sendTemplatedEmailRequest.withDestination(destination);
-        sendTemplatedEmailRequest.withTemplate("EmailVerificationTemplate");
-        sendTemplatedEmailRequest.withTemplateData("{ \"name\":\"" + verifiedUser.getUserPhoneNumber() + "\", \"verificationLink\": \"" + link + "\"}");
-        sendTemplatedEmailRequest.withSource(simpleMailMessage.getFrom());
-        amazonSimpleEmailService.sendTemplatedEmail(sendTemplatedEmailRequest);
-
+        sendConfirmEmailMessage(sendEmailRequest.getFromEmail(), sendEmailRequest.getToEmail(),
+                sendEmailRequest.getSubject(), sendEmailRequest.getBody(), verifiedUser.getUserPhoneNumber(), confirmationLink);
+        LOGGER.info("Exiting OnboardingService.yourEmail");
         return CONFIRMATION_MESSAGE;
     }
 
-
     public EmailResponse confirmEmailToken(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(token)
-                .orElseThrow(() -> new ConfirmationTokenNotFoundException(CONFIRMATION_TOKEN_NOT_FOUND));
-
-        if(confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
-        }
-
-        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
-
-        if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
-        }
-
+        LOGGER.info("Entering OnboardingService.confirmEmailToken");
+        ConfirmationToken confirmationToken = findConfirmationTokenByToken(token);
+        validateConfirmationToken(confirmationToken);
         confirmationToken.setEmailEnabled(true);
         confirmationToken.setConfirmedAt(LocalDateTime.now());
         confirmationTokenRepository.save(confirmationToken);
 
+        LOGGER.info("Exiting OnboardingService.confirmEmailToken");
         return EmailResponse
                 .builder()
                 .emailAddress(confirmationToken.getUser().getEmailAddress())
@@ -196,15 +172,13 @@ public class OnboardingService {
                 .build();
     }
 
-
     public ProfileResponse yourProfile(ProfileRequest yourProfileRequest) {
-        Optional<User> user = userRepository.findByUserPhoneNumber(yourProfileRequest.getUserPhoneNumber());
-        User verifiedUser = verifyPhoneNumberExist(user);
+        LOGGER.info("Entering OnboardingService.yourProfile");
+        User verifiedUser = verifyUserByPhoneNumber(yourProfileRequest.getUserPhoneNumber());
 
         if (!verifiedUser.isUserIsVerified()) {
             throw new UnverifiedUserException(USER_UNVERIFIED);
         }
-
         verifiedUser.setFirstName(yourProfileRequest.getName().getFirstName());
         verifiedUser.setLastName(yourProfileRequest.getName().getLastName());
         verifiedUser.setDateOfBirth(yourProfileRequest.getDateOfBirth());
@@ -229,7 +203,7 @@ public class OnboardingService {
         verifiedUser.setProfileCreated(true);
 
         userRepository.save(verifiedUser);
-
+        LOGGER.info("Exiting OnboardingService.yourProfile");
         return ProfileResponse
                 .builder()
                 .userPhoneNumber(verifiedUser.getUserPhoneNumber())
@@ -237,29 +211,22 @@ public class OnboardingService {
                 .build();
     }
 
-
     public PasswordRegistrationResponse yourPassword(PasswordRequest yourPasswordRequest) {
-        boolean isValidPassword = yourPasswordRequest.getPassword().matches(PASSWORD_REGEX);
-
-        if (!isValidPassword) {
-            throw new InvalidPasswordException(ExceptionMessages.PASSWORD_IS_INVALID);
-        }
-        if (!yourPasswordRequest.getPassword().equals(yourPasswordRequest.getConfirmPassword())) {
-            throw new PasswordMismatchException(ExceptionMessages.PASSWORD_MISMATCH);
-        }
+        LOGGER.info("Entering OnboardingService.yourPassword");
+        validatePassword(yourPasswordRequest);
         String encryptedPassword = passwordEncoder.encode(yourPasswordRequest.getPassword());
 
-        Optional<User> user = userRepository.findByUserPhoneNumber(yourPasswordRequest.getUserPhoneNumber());
-        User verifiedUser = verifyPhoneNumberExist(user);
+        User verifiedUser = verifyUserByPhoneNumber(yourPasswordRequest.getUserPhoneNumber());
 
         verifiedUser.setPasswordHash(encryptedPassword);
         verifiedUser.setPassword(encryptedPassword);
         verifiedUser.setAccountEnabled(true);
         verifiedUser.setPasswordCreatedDate(LocalDateTime.now());
 
-        userRepository.save(verifiedUser);
+        var savedUser = userRepository.save(verifiedUser);
         var jwtToken = jwtService.generateToken(verifiedUser);
-
+        saveUserToken(savedUser, jwtToken);
+        LOGGER.info("Exiting OnboardingService.yourPassword");
         return PasswordRegistrationResponse.builder()
                 .token(jwtToken)
                 .userPhoneNumber(verifiedUser.getUserPhoneNumber())
@@ -268,13 +235,10 @@ public class OnboardingService {
                 .build();
     }
 
-
     public PreferenceResponse yourPreference(PreferenceRequest preferenceRequest) {
-        LOGGER.info(preferenceRequest.toString());
-        Optional<User> user = userRepository.findByUserPhoneNumber(preferenceRequest.getUserPhoneNumber());
-        User verifiedUser = verifyPhoneNumberExist(user);
-
-        Preference preference = Preference.builder()
+        LOGGER.info("Entering OnboardingService.yourPreference");
+        User verifiedUser = verifyUserByPhoneNumber(preferenceRequest.getUserPhoneNumber());
+        UserPreference preference = UserPreference.builder()
                 .preferredGender(preferenceRequest.getPreferredGender())
                 .preferredTribes(preferenceRequest.getPreferredTribes())
                 .preferredAgeRange(preferenceRequest.getPreferredAgeRange())
@@ -294,7 +258,7 @@ public class OnboardingService {
         verifiedUser.setPreferences(preference);
         verifiedUser.setPreferenceCreated(preference.isPreferenceCreated());
         userRepository.save(verifiedUser);
-
+        LOGGER.info("Exiting OnboardingService.yourPreference");
         return PreferenceResponse
                 .builder()
                 .preferenceCreated(preference.isPreferenceCreated())
@@ -302,13 +266,126 @@ public class OnboardingService {
                 .build();
     }
 
-
     public LoginResponse loginAuthentication(LoginRequest yourLoginRequest) throws PasswordMismatchException, AccountNotEnabledException {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(yourLoginRequest.getUserPhoneNumber(), yourLoginRequest.getPassword()));
+        LOGGER.info("Entering OnboardingService.loginAuthentication");
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(yourLoginRequest.getUserPhoneNumber(), yourLoginRequest.getPassword()));
+        } catch (AuthenticationException ex) {
+            throw new InvalidCredentialsException(INVALID_CREDENTIALS_PROVIDED);
+        }
 
-        Optional<User> user = userRepository.findByUserPhoneNumber(yourLoginRequest.getUserPhoneNumber());
-        User verifiedUser = verifyPhoneNumberExist(user);
+        User verifiedUser = verifyUserByPhoneNumber(yourLoginRequest.getUserPhoneNumber());
+        loginValidations(yourLoginRequest, verifiedUser);
+        verifiedUser.setUserLoggedIn(true);
+        var jwtToken = jwtService.generateToken(verifiedUser);
+        revokeAllUserTokens(verifiedUser);
+        saveUserToken(verifiedUser, jwtToken);
+        LOGGER.info("Exiting OnboardingService.loginAuthentication");
+        return LoginResponse
+                .builder()
+                .token(jwtToken)
+                .userLoggedIn(verifiedUser.isUserLoggedIn())
+                .userPhoneNumber(verifiedUser.getUserPhoneNumber())
+                .build();
+    }
 
+    public String  forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        LOGGER.info("Entering OnboardingService.forgotPassword");
+        User verifiedUser = verifyUserByPhoneNumber(forgotPasswordRequest.getUserPhoneNumber());
+
+        String token = generateToken();
+        verifiedUser.setPassword(token);
+        verifiedUser.setPasswordResetToken(token);
+
+        userRepository.save(verifiedUser);
+        String forgotPasswordLink = generatePasswordResetLink(token);
+        sendResetPasswordEmailMessage(forgotPasswordRequest, verifiedUser, forgotPasswordLink);
+        LOGGER.info("Exiting OnboardingService.forgotPassword");
+        return token;
+    }
+
+    public void resetPassword(String token, ResetPasswordRequest resetPasswordRequest) {
+        LOGGER.info("Entering OnboardingService.resetPassword");
+        User verifiedUser = verifyResetToken(token);
+        validateResetPassword(resetPasswordRequest);
+
+        String encryptedPassword = passwordEncoder.encode(resetPasswordRequest.getNewPassword());
+        verifiedUser.setPassword(encryptedPassword);
+        verifiedUser.setPasswordUpdatedDate(LocalDateTime.now());
+        verifiedUser.setPasswordResetToken(null);
+        userRepository.save(verifiedUser);
+        LOGGER.info("Exiting OnboardingService.resetPassword");
+    }
+
+    // PRIVATE METHODS
+    private void populatePhoneNumberLookUpData(User user) {
+        LOGGER.info("Entering OnboardingService.populatePhoneNumberLookUpData");
+        com.twilio.rest.lookups.v2.PhoneNumber twilioPhoneNumber = com.twilio.rest.lookups.v2.PhoneNumber.fetcher(user.getUserPhoneNumber()).fetch();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        PhoneNumberLookUpData phoneNumberLookUpData = modelMapper.map(twilioPhoneNumber, PhoneNumberLookUpData.class);
+        user.setPhoneNumberLookUpData(phoneNumberLookUpData);
+        LOGGER.info("Exiting OnboardingService.populatePhoneNumberLookUpData");
+    }
+
+    private ConfirmationToken generateConfirmationToken(User user) {
+        LOGGER.info("Entering OnboardingService.generateConfirmationToken");
+        String token = UUID.randomUUID().toString();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expirationTime = now.plusMinutes(15);
+        LOGGER.info("Exiting OnboardingService.generateConfirmationToken");
+        return new ConfirmationToken(token, now, expirationTime, user);
+    }
+
+    private String generateConfirmationLink(ConfirmationToken confirmationToken) {
+        LOGGER.info("Entering and exiting Onboarding.generateConfirmationLink");
+        return serverHostUrl + "/api/v1/auth/confirmEmail?token=" + confirmationToken.getToken();
+    }
+
+    private ConfirmationToken findConfirmationTokenByToken(String token) {
+        LOGGER.info("Entering and exiting OnboardingService.findConfirmationTokenByToken");
+        return confirmationTokenRepository.findByToken(token)
+                .orElseThrow(() -> new ConfirmationTokenNotFoundException(CONFIRMATION_TOKEN_NOT_FOUND));
+    }
+
+    private void sendVerificationCode(String phoneNumber) {
+        LOGGER.info("Entering OnboardingService.sendVerificationCode");
+        Twilio.init(twilioAccountSid, twilioAuthToken);
+        String verificationCode = generateVerificationCode();
+        Message.creator(new com.twilio.type.PhoneNumber(phoneNumber), new com.twilio.type.PhoneNumber(twilioPhoneNumber), VERIFICATION_MESSAGE + verificationCode).create();
+        User verifiedUser = verifyUserByPhoneNumber(phoneNumber);
+
+        verifiedUser.setVerificationCode(verificationCode);
+        userRepository.save(verifiedUser);
+        LOGGER.info("Exiting OnboardingService.sendVerificationCode");
+    }
+
+    private static Destination getDestination(SimpleMailMessage simpleMailMessage) {
+        LOGGER.info("Entering OnboardingService.getDestination");
+        Destination destination = new Destination();
+        List<String> toAddresses = new ArrayList<>();
+        String[] emails = simpleMailMessage.getTo();
+        Collections.addAll(toAddresses, Objects.requireNonNull(emails));
+        destination.setToAddresses(toAddresses);
+        LOGGER.info("Exiting OnboardingService.getDestination");
+        return destination;
+    }
+
+    private User verifyUserByPhoneNumber(String phoneNumber) {
+        LOGGER.info("Entering OnboardingService.verifyUserByPhoneNumber");
+        Optional<User> user = userRepository.findByUserPhoneNumber(phoneNumber);
+        LOGGER.info("Exiting OnboardingService.verifyUserByPhoneNumber");
+        return verifyPhoneNumberExist(user);
+    }
+
+    private String generateVerificationCode() {
+        // Generate a random 6-digit numeric verification code
+        LOGGER.info("Entering and exiting OnboardingService.generateVerificationCode");
+        return String.format("%06d", (int) (Math.random() * 1_000_000));
+    }
+
+    private void loginValidations(LoginRequest yourLoginRequest, User verifiedUser) {
+        LOGGER.info("Entering OnboardingService.loginValidations");
         if (verifiedUser.isAccountLocked() || verifiedUser.isAccountExpired() || verifiedUser.isCredentialsExpired()) {
             throw new AccessNotAllowedException(USER_ACCESS_REVOKED);
         }
@@ -321,103 +398,83 @@ public class OnboardingService {
         if (!passwordEncoder.matches(yourLoginRequest.getPassword(), verifiedUser.getPassword())) {
             throw new PasswordMismatchException(PHONE_NUMBER_IS_INVALID);
         }
-
-        verifiedUser.setUserLoggedIn(true);
-        userRepository.save(verifiedUser);
-
-        var jwtToken = jwtService.generateToken(verifiedUser);
-
-        return LoginResponse
-                .builder()
-                .token(jwtToken)
-                .userLoggedIn(verifiedUser.isUserLoggedIn())
-                .userPhoneNumber(verifiedUser.getUserPhoneNumber())
-                .build();
+        LOGGER.info("Exiting OnboardingService.loginValidations");
     }
 
+    private void sendConfirmEmailMessage(String fromEmail, String toEmail, String subject, String body, String userPhoneNumber, String confirmationLink) {
+        LOGGER.info("Entering OnboardingService.sendConfirmEmailMessage");
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom(fromEmail);
+        simpleMailMessage.setTo(toEmail);
+        simpleMailMessage.setSubject(subject);
+        simpleMailMessage.setText(body);
 
-    public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
-        Optional<User> user = userRepository.findByUserPhoneNumber(forgotPasswordRequest.getUserPhoneNumber());
-        User verifiedUser = verifyPhoneNumberExist(user);
+        Destination destination = getDestination(simpleMailMessage);
 
-        String token = generateToken();
-        verifiedUser.setPassword(token);
-        verifiedUser.setPasswordResetToken(token);
+        SendTemplatedEmailRequest sendTemplatedEmailRequest = new SendTemplatedEmailRequest();
+        sendTemplatedEmailRequest.withDestination(destination);
+        sendTemplatedEmailRequest.withTemplate("EmailVerificationTemplate");
+        sendTemplatedEmailRequest.withTemplateData("{ \"name\":\"" + userPhoneNumber + "\", \"verificationLink\": \"" + confirmationLink + "\"}");
+        sendTemplatedEmailRequest.withSource(simpleMailMessage.getFrom());
+        amazonSimpleEmailService.sendTemplatedEmail(sendTemplatedEmailRequest);
+        LOGGER.info("Exiting OnboardingService.sendConfirmEmailMessage");
+    }
 
-        userRepository.save(verifiedUser);
-        String link = serverHostUrl + "/api/v1/auth/reset-password?token=" + token;
+    private String generateToken() {
+        LOGGER.info("Entering and exiting OnboardingService.generateToken");
+        return UUID.randomUUID().toString();
+    }
 
+    private void sendResetPasswordEmailMessage(ForgotPasswordRequest forgotPasswordRequest, User verifiedUser, String forgotPasswordLink) {
+        LOGGER.info("Entering OnboardingService.sendResetPasswordEmailMessage");
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(forgotPasswordRequest.getFromEmail());
         simpleMailMessage.setTo(forgotPasswordRequest.getToEmail());
         simpleMailMessage.setSubject(forgotPasswordRequest.getSubject());
         simpleMailMessage.setText(forgotPasswordRequest.getBody());
 
-        Destination destination = new Destination();
-        List<String> toAddresses = new ArrayList<>();
-        String[] emails = simpleMailMessage.getTo();
-        Collections.addAll(toAddresses, Objects.requireNonNull(emails));
-        destination.setToAddresses(toAddresses);
+        Destination destination = getDestination(simpleMailMessage);
 
         SendTemplatedEmailRequest sendTemplatedEmailRequest = new SendTemplatedEmailRequest();
         sendTemplatedEmailRequest.withDestination(destination);
         sendTemplatedEmailRequest.withTemplate("PasswordResetTemplate");
-        sendTemplatedEmailRequest.withTemplateData("{ \"name\":\"" + verifiedUser.getFirstName() + "\", \"resetLink\": \"" + link + "\"}");
+        sendTemplatedEmailRequest.withTemplateData("{ \"name\":\"" + verifiedUser.getFirstName() + "\", \"resetLink\": \"" + forgotPasswordLink + "\"}");
         sendTemplatedEmailRequest.withSource(simpleMailMessage.getFrom());
         amazonSimpleEmailService.sendTemplatedEmail(sendTemplatedEmailRequest);
+        LOGGER.info("Exiting OnboardingService.sendResetPasswordEmailMessage");
     }
 
+    private String generatePasswordResetLink(String token) {
+        LOGGER.info("Entering and exiting OnboardingService.generatePasswordResetLink");
+        return serverHostUrl + "/api/v1/auth/resetPassword?token=" + token;
+    }
 
-    public void resetPassword(String token, ResetPasswordRequest resetPasswordRequest) {
-        LOGGER.info("Token params value: " + token);
+    private User verifyResetToken(String token) {
+        LOGGER.info("Entering and exiting OnboardingService.verifyResetToken");
         Optional<User> user = userRepository.findByPasswordResetToken(token);
-        User verifiedUser = verifyTokenExist(user);
+        return verifyTokenExist(user);
+    }
 
-        boolean isValidPasswordNew = resetPasswordRequest.getNewPassword().matches(PASSWORD_REGEX);
-        boolean isValidPasswordConfirm = resetPasswordRequest.getConfirmNewPassword().matches(PASSWORD_REGEX);
-
-        if (!isValidPasswordNew || !isValidPasswordConfirm) {
-            throw new InvalidPasswordException(ExceptionMessages.PASSWORD_IS_INVALID);
+    private void revokeAllUserTokens(User user) {
+        var validUserToken = jwtTokenRepository.findAllValidTokensByUser(user);
+        if (validUserToken.isEmpty()) {
+            return;
         }
-
-        if (!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmNewPassword())) {
-            throw new PasswordMismatchException(ExceptionMessages.PASSWORD_MISMATCH);
-        }
-
-        String encryptedPassword = passwordEncoder.encode(resetPasswordRequest.getNewPassword());
-        verifiedUser.setPassword(encryptedPassword);
-        verifiedUser.setPasswordUpdatedDate(LocalDateTime.now());
-        verifiedUser.setPasswordResetToken(null);
-        userRepository.save(verifiedUser);
+        validUserToken.forEach(t -> {
+            t.setExpired(true);
+            t.setRevoked(true);
+        });
+        jwtTokenRepository.saveAll(validUserToken);
     }
 
-
-    private void sendVerificationCode(String phoneNumber) {
-
-        //TODO - Error handling: Handle any exceptions that might occur during the verification code sending process.
-        //TODO - Phone number validation: ensure that the phone number provided is in the correct format for the country the phone number belongs to. You can use a phone number validation library or write your own phone number validation code to ensure the phone number provided is valid.
-        //TODO - Storing verification code: You might want to consider storing the verification code with an expiration time, so that if the user does not verify within a certain amount of time, the verification code is no longer valid.
-        //TODO - Security: You should ensure that the verification code is only accessible by the user and not visible to other users or stored in plain text.
-
-        Twilio.init(twilioAccountSid, twilioAuthToken);
-        String verificationCode = generateVerificationCode();
-        Message.creator(new com.twilio.type.PhoneNumber(phoneNumber), new com.twilio.type.PhoneNumber(twilioPhoneNumber), "Your LYNE verification code is: " + verificationCode).create();
-
-        Optional<User> user = userRepository.findByUserPhoneNumber(phoneNumber);
-        User verifiedUser = verifyPhoneNumberExist(user);
-
-        verifiedUser.setVerificationCode(verificationCode);
-        userRepository.save(verifiedUser);
-    }
-
-
-    private String generateVerificationCode() {
-        // Generate a random 6-digit numeric verification code
-        return String.format("%06d", (int) (Math.random() * 1_000_000));
-    }
-
-
-    private String generateToken() {
-        return UUID.randomUUID().toString();
+    private void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .revoked(false)
+                .expired(false)
+                .build();
+        jwtTokenRepository.save(token);
     }
 }

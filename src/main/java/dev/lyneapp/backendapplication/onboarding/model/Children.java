@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Children {
-    private boolean doYouWantSomeoneWithChildren;
+    private boolean shouldTheyHaveChildren;
     private boolean openToAll;
 }

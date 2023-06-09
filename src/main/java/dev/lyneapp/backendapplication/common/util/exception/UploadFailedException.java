@@ -1,0 +1,10 @@
+package dev.lyneapp.backendapplication.common.util.exception;
+
+import java.io.IOException;
+
+
+public class UploadFailedException extends RuntimeException {
+    public UploadFailedException(String message, IOException e) {
+        super(message);
+    }
+}

@@ -31,7 +31,7 @@ public class JwtService {
         return extractClaim(jwtToken, Claims::getSubject);
     }
 
-    public String generateToken (UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
@@ -75,7 +75,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte [] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

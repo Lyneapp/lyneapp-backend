@@ -1,0 +1,41 @@
+[
+  {
+    "USER_ID": "14165551234",
+    "ITEM_ID": "14165554678",
+    "TIMESTAMP": "2023-05-31T10:15:00",
+    "RECOMMENDATION_FREQUENCY": 3,
+    "RECOMMENDATION_WEIGHT": null,
+    "GENDER": "Female",
+    "TRIBE": "Yoruba",
+    "AGE": "27",
+    "HEIGHT": "171",
+    "RELIGION": "Christian",
+    "QUALIFICATION": "Bachelor's",
+    "OCCUPATION": "Nurse",
+    "LOCATION": "Toronto",
+    "INTERESTS": "Travel, Cooking",
+    "LANGUAGES": "English, Yoruba",
+    "MATCHED": true,
+    "DO_YOU_DRINK": false,
+    "DO_YOU_SMOKE": false,
+    "DO_YOU_HAVE_CHILDREN": false,
+    "ACCOUNT_VERIFIED_BADGE": true,
+    "PREFERENCES": {
+      "GENDER": "Male",
+      "TRIBES": "Yoruba, Igbo",
+      "AGE_RANGE_MIN": "28",
+      "AGE_RANGE_MAX": "40",
+      "HEIGHT_RANGE_MIN": "172",
+      "HEIGHT_RANGE_MAX": "190",
+      "RELIGION": "Christian",
+      "LOCATIONS": "Toronto, Calgary",
+      "INTERESTS": "Reading, Fitness",
+      "LANGUAGES": "English, Yoruba",
+      "SHOULD_THEY_DRINK": false,
+      "SHOULD_THEY_SMOKE": false,
+      "SHOULD_THEY_HAVE_CHILDREN": false,
+      "ACCOUNT_VERIFIED_BADGE": true
+    }
+  }
+]
+

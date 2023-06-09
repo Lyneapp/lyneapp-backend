@@ -5,6 +5,7 @@ import dev.lyneapp.backendapplication.onboarding.model.request.*;
 import dev.lyneapp.backendapplication.onboarding.model.response.*;
 
 import dev.lyneapp.backendapplication.onboarding.service.OnboardingService;
+import dev.lyneapp.backendapplication.onboarding.model.request.ChangePhoneNumberRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -14,13 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 // TODO Implement logic for logout - https://youtu.be/0GGFZdYe-FY
-// TODO Implement Cognito AuthZ, AuthN and phone number verification
+// TODO Implement Cognito AuthZ, AuthN
 // TODO ADD Logger as appropriate
-// TODO Send the userID to the frontend to enable the user put and get their media files base don the unique ID
 // TODO What happens when a user fills the onboarding form halfway - we will have to roll back and the user starts afresh. I will set a 24 hour timer that upon expiration removes all the data associated with the user from the database
 // TODO Update Location data when the logs in and save to database. Login is when the user opens the app or enters credentials
 // TODO implement social login with spring https://youtu.be/2WNjmT2z7c4
 
+// TODO for each of the modules include the module name in the uri e.g. api/vi/onboarding/phoneNumberSignup
 
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +38,12 @@ public class OnboardingController {
     public ResponseEntity<?> phoneNumberSignUp(@Valid @RequestBody PhoneNumberRequest yourPhoneNumberRequest) {
         onboardingService.phoneNumberSignUp(yourPhoneNumberRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "changePhoneNumber")
+    public ResponseEntity<String> changePhoneNumber(@RequestBody ChangePhoneNumberRequest changePhoneNumberRequest) {
+        onboardingService.changePhoneNumber(changePhoneNumberRequest);
+        return ResponseEntity.ok("Phone number changed successfully.");
     }
 
     @PostMapping(path ="verifyPhoneNumber")
@@ -83,8 +90,8 @@ public class OnboardingController {
 
     @PostMapping(path = "forgotPassword")
     public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
-        onboardingService.forgotPassword(forgotPasswordRequest);
-        return  ResponseEntity.status(HttpStatus.OK).body(PASSWORD_RESET_MAIL_SUCCESS_MESSAGE);
+        String resetPasswordToken = onboardingService.forgotPassword(forgotPasswordRequest);
+        return  ResponseEntity.status(HttpStatus.OK).body(PASSWORD_RESET_MAIL_SUCCESS_MESSAGE + " your temporary password is: " + resetPasswordToken);
     }
 
     @PostMapping(path = "resetPassword")

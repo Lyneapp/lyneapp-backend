@@ -1,5 +1,6 @@
 package dev.lyneapp.backendapplication.onboarding.model;
 
+import dev.lyneapp.backendapplication.common.model.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.data.annotation.Id;
