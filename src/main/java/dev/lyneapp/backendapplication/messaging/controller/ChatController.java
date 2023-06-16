@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// TODO https://www.youtube.com/watch?v=TywlS9iAZCM
+
 /**
  * <br>How to determine if the user is online?<br>
  * <br>1. User login<br>
@@ -24,8 +26,6 @@ import java.util.List;
  * <br>- Add a boolean for online presence an implement front end and backend logic for that feature.<br>
  * <br>- Should we start with disappearing messages<br>
  */
-
-
 
 @RestController
 @RequestMapping("/api/v1/messaging/")

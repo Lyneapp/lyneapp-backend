@@ -53,6 +53,8 @@ import static dev.lyneapp.backendapplication.common.util.exception.ExceptionMess
  * <br>It's important to refer to the AWS Personalize documentation for detailed instructions, API references, and best practices while setting up and using the service.
  */
 
+
+
 @Service
 public class RecommendationService {
     // TODO If disliked, wait 72 hours and show profile again
@@ -60,6 +62,14 @@ public class RecommendationService {
     // TODO For the recommendation engine, load users to the cache once every 24 hours and then when the user makes a call to get recommendations,
     // TODO Get X recommendations for the user on a schedule (24hrs cycle) and then filter out the users that the user has already seen and are blocked
     // TODO Handle the case where the user has already seen all the recommendations and there are no more recommendations to show gracefully
+
+    /**
+     _TODO_
+     <br>1. Create a cache for the recommendable profiles and populate the cache<br>
+     <br>2. Provide X number of ranked (by time and/or weight) recommendations per day<br>
+     <br>3. Requeue unmatched profiles into the cache after X number of days<br>
+     <br>4. Use mongoDB to filter based on configurable data points and user preference - write x number of filters to accommodate for different use cases.<br>
+     */
 
 
     @Value("${filter.arn}")
