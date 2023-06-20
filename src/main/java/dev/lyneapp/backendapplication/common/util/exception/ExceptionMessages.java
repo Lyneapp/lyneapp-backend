@@ -36,4 +36,5 @@ public class ExceptionMessages {
     public static final String INVALID_USER_ID_FOR_USER = "XXXXXXXXXXXXXXXXXXXXXXXX";
     public static final String INVALID_USER_ID_FOR_ROLE = "Invalid user ID for role";
     public static final String INVALID_ROLE_ID = "Invalid role ID";
+    public static final String PASSWORD_THE_SAME = "The password is the same as the old one, please enter a different password";
 }

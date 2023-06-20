@@ -308,13 +308,23 @@ public class OnboardingService {
         LOGGER.info("Entering OnboardingService.resetPassword");
         User verifiedUser = verifyResetToken(token);
         validateResetPassword(resetPasswordRequest);
-
         String encryptedPassword = passwordEncoder.encode(resetPasswordRequest.getNewPassword());
         verifiedUser.setPassword(encryptedPassword);
         verifiedUser.setPasswordUpdatedDate(LocalDateTime.now());
         verifiedUser.setPasswordResetToken(null);
         userRepository.save(verifiedUser);
         LOGGER.info("Exiting OnboardingService.resetPassword");
+    }
+
+    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+        LOGGER.info("Entering OnboardingService.changePassword");
+        User verifiedUser = verifyUserByPhoneNumber(changePasswordRequest.getUserPhoneNumber());
+        validateChangePassword(changePasswordRequest);
+        String encryptedPassword = passwordEncoder.encode(changePasswordRequest.getNewPassword());
+        verifiedUser.setPassword(encryptedPassword);
+        verifiedUser.setPasswordUpdatedDate(LocalDateTime.now());
+        userRepository.save(verifiedUser);
+        LOGGER.info("Exiting OnboardingService.changePassword");
     }
 
     // PRIVATE METHODS
@@ -452,11 +462,13 @@ public class OnboardingService {
     private User verifyResetToken(String token) {
         LOGGER.info("Entering and exiting OnboardingService.verifyResetToken");
         Optional<User> user = userRepository.findByPasswordResetToken(token);
+        LOGGER.info("Exiting OnboardingService.verifyResetToken");
         return verifyTokenExist(user);
     }
 
     private void revokeAllUserTokens(User user) {
         var validUserToken = jwtTokenRepository.findAllValidTokensByUser(user);
+        LOGGER.info("Entering OnboardingService.revokeAllUserTokens");
         if (validUserToken.isEmpty()) {
             return;
         }
@@ -465,9 +477,11 @@ public class OnboardingService {
             t.setRevoked(true);
         });
         jwtTokenRepository.saveAll(validUserToken);
+        LOGGER.info("Exiting OnboardingService.revokeAllUserTokens");
     }
 
     private void saveUserToken(User user, String jwtToken) {
+        LOGGER.info("Entering OnboardingService.saveUserToken");
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)
@@ -476,5 +490,6 @@ public class OnboardingService {
                 .expired(false)
                 .build();
         jwtTokenRepository.save(token);
+        LOGGER.info("Exiting OnboardingService.saveUserToken");
     }
 }

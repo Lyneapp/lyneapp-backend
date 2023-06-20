@@ -29,7 +29,6 @@ public class SettingsService {
         LOGGER.info("Entering SettingsService.deleteAccount");
         validatePhoneNumber(deleteAccountRequest.getUserPhoneNumber());
         User user = verifyUserByPhoneNumber(deleteAccountRequest.getUserPhoneNumber());
-
         userRepository.delete(user);
         jwtTokenRepository.deleteAllByUser(user);
         confirmationTokenRepository.deleteAllByUser(user);

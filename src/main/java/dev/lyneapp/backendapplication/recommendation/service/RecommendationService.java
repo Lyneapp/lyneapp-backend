@@ -9,8 +9,11 @@ import dev.lyneapp.backendapplication.common.model.UserPreference;
 import dev.lyneapp.backendapplication.common.repository.UserPreferenceRepository;
 import dev.lyneapp.backendapplication.common.repository.UserRepository;
 import dev.lyneapp.backendapplication.common.util.exception.UserIdNotFoundException;
+import dev.lyneapp.backendapplication.onboarding.service.MediaFilesService;
 import dev.lyneapp.backendapplication.recommendation.model.RecommendationRequest;
 import org.apache.commons.lang3.Range;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -71,6 +74,7 @@ public class RecommendationService {
      <br>4. Use mongoDB to filter based on configurable data points and user preference - write x number of filters to accommodate for different use cases.<br>
      */
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(RecommendationService.class);
 
     @Value("${filter.arn}")
     private String filterArn;
@@ -99,6 +103,7 @@ public class RecommendationService {
 
     @Cacheable(value = "Users", key = "#recommendationRequest.getUserPhoneNumber()", unless = "#result.size() == 0")
     public List<User> getVanillaRecommendations(RecommendationRequest recommendationRequest) {
+        LOGGER.info("Getting vanilla recommendations for user {}", recommendationRequest.getUserPhoneNumber());
         UserPreference userPreference = userPreferenceRepository.findById(recommendationRequest.getUserPhoneNumber()).orElse(null);
         if (userPreference == null) {
             throw new UserIdNotFoundException(USER_NOT_FOUND_WITH_ID);
@@ -192,47 +197,59 @@ public class RecommendationService {
 
         // Cache the recommended users for 5 days
         cacheRecommendedUsers(recommendationRequest.getUserPhoneNumber(), finalRecommendations);
+        LOGGER.info("Returning {} recommendations for user {}", finalRecommendations.size(), recommendationRequest.getUserPhoneNumber());
         return finalRecommendations;
     }
 
     public void cacheRecommendedUsers(String userId, List<User> recommendedUsers) {
+        LOGGER.info("Caching {} recommended users for user {}", recommendedUsers.size(), userId);
         LocalDateTime expirationTime = LocalDateTime.now().plusDays(5);
 
         recommendedUsersCache.put(userId, recommendedUsers);
         recommendedUsersCache.put(userId + "_expiration", expirationTime);
+        LOGGER.info("Cached {} recommended users for user {}", recommendedUsers.size(), userId);
     }
 
     @Cacheable(value = "addMatchedUsers", key = "#userId")
     public void addToMatchedUsersCache(String userId) {
+        LOGGER.info("Adding user {} to matched users cache", userId);
         matchedUsersCache.put(userId, true);
+        LOGGER.info("Added user {} to matched users cache", userId);
     }
 
     @Cacheable(value = "addToLikedUsers", key = "#userId")
     public void addToLikedUsersCache(String userId) {
+        LOGGER.info("Adding user {} to liked users cache", userId);
         likedUsersCache.put(userId, true);
+        LOGGER.info("Added user {} to liked users cache", userId);
     }
 
     @Cacheable(value = "blockedUsers", key = "#userId")
     public boolean isUserBlocked(String userId) {
+        LOGGER.info("Checking if user {} is blocked", userId);
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
             throw new UserIdNotFoundException(USER_NOT_FOUND_WITH_ID);
         }
+        LOGGER.info("User {} is blocked", userId);
         return user.getBlockedUsers().contains(userId);
     }
 
     @Cacheable(value = "matchedUsers", key = "#userId")
     public boolean isUserMatched(String userId) {
         // Code to check if the user is matched
+        LOGGER.info("Checking if user {} is matched", userId);
         return matchedUsersCache.get(userId, Boolean.class) != null;
     }
 
     @Cacheable(value = "likedUsers", key = "#userId")
     public boolean isUserLiked(String userId) {
+        LOGGER.info("Checking if user {} is liked", userId);
         return likedUsersCache.get(userId, Boolean.class) != null;
     }
 
     public GetRecommendationsResult getRecommendations(RecommendationRequest recommendationRequest) {
+        LOGGER.info("Getting recommendations for user {}", recommendationRequest.getUserPhoneNumber());
         StringBuilder filterExpression = new StringBuilder();
         if (recommendationRequest.getMinAge() > 0 && recommendationRequest.getMaxAge() > 0) {
             filterExpression.append("Users.age >= ").append(recommendationRequest.getMinAge()).append(" AND Users.age <= ").append(recommendationRequest.getMaxAge()).append(" ");
@@ -289,11 +306,12 @@ public class RecommendationService {
         // TODO - and store the list in a cache or in DB so that we don't send the same users redundantly the next couple of days (5 - 7) and then clear it
         // TODO - only to recommend users that have never been matched with the user previously
         // TODO - we populate each user's UserProfile model class
-
+        LOGGER.info("Getting recommendations for user {} with filter expression {}", recommendationRequest.getUserPhoneNumber(), filterExpression.toString());
         return personalizeRuntimeClient.getRecommendations(request);
     }
 
     private Map<String, String> createFilterValues(RecommendationRequest recommendationRequest, String filterExpression) {
+        LOGGER.info("Creating filter values for user {}", recommendationRequest.getUserPhoneNumber());
         Map<String, String> filterValues = new HashMap<>();
 
         // Set the filter expression
@@ -333,7 +351,7 @@ public class RecommendationService {
         filterValues.put("$pref_smoking", String.valueOf(recommendationRequest.isPrefSmoking()));
         filterValues.put("$pref_children", String.valueOf(recommendationRequest.isPrefChildren()));
         filterValues.put("$is_verified", String.valueOf(recommendationRequest.isVerified()));
-
+        LOGGER.info("Created filter values for user {}", recommendationRequest.getUserPhoneNumber());
         return filterValues;
     }
 }

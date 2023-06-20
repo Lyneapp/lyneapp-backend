@@ -75,7 +75,8 @@ public class User implements UserDetails {
     private String aboutYou;
     private String role;
     private String gender;
-    private String age = getAge();
+    private String age;
+//    private String age = getAge();
 
     private double score; // recommendation score
 
@@ -111,14 +112,14 @@ public class User implements UserDetails {
     private boolean preferenceCreated;
     private boolean accountVerifiedBadge;
 
-
-    public String getAge() {
-        LocalDate currentDate = LocalDate.now();
-        assert dateOfBirth != null;
-        Period period = Period.between(dateOfBirth, currentDate);
-        int years = period.getYears();
-        return String.valueOf(years);
-    }
+    // TODO set age when you get date of birth and when need to return age, call this method
+//    public String getAge() {
+//        LocalDate currentDate = LocalDate.now();
+//        assert dateOfBirth != null;
+//        Period period = Period.between(dateOfBirth, currentDate);
+//        int years = period.getYears();
+//        return String.valueOf(years);
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

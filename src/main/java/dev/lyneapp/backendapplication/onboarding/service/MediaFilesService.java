@@ -45,6 +45,7 @@ public class MediaFilesService {
     private String amazonawsDotCom;
 
     public void uploadMediaFiles(MultipartFile[] mediaFiles, UploadMediaFilesRequest uploadMediaFilesRequest) {
+        LOGGER.info("Uploading media files for user with phone number: {}", uploadMediaFilesRequest.getUserPhoneNumber());
         Optional<User> user = userRepository.findByUserPhoneNumber(uploadMediaFilesRequest.getUserPhoneNumber());
         User verifiedUser = verifyPhoneNumberExist(user);
         String id = verifiedUser.getId();
@@ -53,22 +54,25 @@ public class MediaFilesService {
             String imageUrl = uploadMediaFileTos3(id, mediaFile);
             saveMediaFilesURLToMongo(id, imageUrl);
         }
+        LOGGER.info("Successfully uploaded media files for user with phone number: {}", uploadMediaFilesRequest.getUserPhoneNumber());
     }
 
 
     public List<String> getAllMediaFileUrls(GetMediaFilesRequest getMediaFilesRequest) {
+        LOGGER.info("Getting all media file urls for user with phone number: {}", getMediaFilesRequest.getUserPhoneNumber());
         Optional<User> user = userRepository.findByUserPhoneNumber(getMediaFilesRequest.getUserPhoneNumber());
         User verifiedUser = verifyPhoneNumberExist(user);
         String id = verifiedUser.getId();
 
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(id));
-
+        LOGGER.info("Successfully got all media file urls for user with phone number: {}", getMediaFilesRequest.getUserPhoneNumber());
         return verifiedUser.getMediaFileURLs();
     }
 
 
     public List<String> deleteMediaFilesUrl(DeleteMediaFilesRequest deleteMediaFilesRequest) {
+        LOGGER.info("Deleting media file urls for user with phone number: {}", deleteMediaFilesRequest.getUserPhoneNumber());
         List<String> remainingMediaFileUrls = new ArrayList<>();
         Optional<User> user = userRepository.findByUserPhoneNumber(deleteMediaFilesRequest.getUserPhoneNumber());
         User verifiedUser = verifyPhoneNumberExist(user);
@@ -90,11 +94,13 @@ public class MediaFilesService {
                 remainingMediaFileUrls.add(mediaFileUrl);
             }
         }
+        LOGGER.info("Successfully deleted media file urls for user with phone number: {}", deleteMediaFilesRequest.getUserPhoneNumber());
         return remainingMediaFileUrls;
     }
 
 
     private String uploadMediaFileTos3(String id, MultipartFile mediaFile) {
+        LOGGER.info("Uploading media file to s3 for user with id: {}", id);
         String mediaFileName = UUID.randomUUID().toString();
         String mediaFileURL = "https://" + awsS3MediaBucket + ".s3." + s3Client.getRegion() + "." + amazonawsDotCom + "/" + id + "/" + mediaFileName;
 
@@ -106,11 +112,13 @@ public class MediaFilesService {
         } catch (IOException e) {
             throw new UploadFailedException((String) FAILED_TO_UPLOAD_IMAGE_S3, e);
         }
+        LOGGER.info("Successfully uploaded media file to s3 for user with id: {}", id);
         return mediaFileURL;
     }
 
 
     private void saveMediaFilesURLToMongo(String id, String mediaFileUrl) {
+        LOGGER.info("Saving media file url to mongo for user with id: {}", id);
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(id));
         Update update = new Update();
@@ -120,10 +128,12 @@ public class MediaFilesService {
         if (updatedResult.getMatchedCount() == 0) {
             throw new UserNotFoundException(USER_NOT_FOUND_WITH_ID + id);
         }
+        LOGGER.info("Successfully saved media file url to mongo for user with id: {}", id);
     }
 
 
     private String extractS3KeyFromUrl(String mediaFileUrl) {
+        LOGGER.info("Extracting s3 key from url: {}", mediaFileUrl);
         String[] parts = mediaFileUrl.split("/");
         int length = parts.length;
 
@@ -134,6 +144,7 @@ public class MediaFilesService {
                 s3KeyBuilder.append("/");
             }
         }
+        LOGGER.info("Successfully extracted s3 key from url: {}", mediaFileUrl);
         return s3KeyBuilder.toString();
     }
 }

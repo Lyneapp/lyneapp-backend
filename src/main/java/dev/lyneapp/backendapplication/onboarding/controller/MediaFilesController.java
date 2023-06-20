@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,29 +45,38 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MediaFilesController {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(MediaFilesController.class);
     private final MediaFilesService mediaFilesService;
 
 
     @PostMapping(path = "uploadMedia", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> uploadMediaFiles(@RequestParam("mediaFile") MultipartFile[] mediaFile, @RequestParam("userPhoneNumber") @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$") @Size(max = 15) String userPhoneNumber
+    public ResponseEntity<Void> uploadMediaFiles(
+            @RequestParam("mediaFile") MultipartFile[] mediaFile,
+            @RequestParam("userPhoneNumber") @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$") @Size(max = 15) String userPhoneNumber
     ) {
+        LOGGER.info("Media file upload request received for user with phone number: {}", userPhoneNumber);
         UploadMediaFilesRequest uploadMediaFilesRequest = new UploadMediaFilesRequest();
         uploadMediaFilesRequest.setUserPhoneNumber(userPhoneNumber);
         mediaFilesService.uploadMediaFiles(mediaFile, uploadMediaFilesRequest);
+        LOGGER.info("Media file upload request completed for user with phone number: {}", userPhoneNumber);
         return ResponseEntity.ok().build();
     }
 
 
     @GetMapping(path = "getMedia", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getAllMediaFileUrls(@Valid @RequestBody GetMediaFilesRequest getMediaFilesRequest) {
+        LOGGER.info("Media file get request received for user with id: {}", getMediaFilesRequest.getUserPhoneNumber());
         List<String> mediaFileURLs = mediaFilesService.getAllMediaFileUrls(getMediaFilesRequest);
+        LOGGER.info("Media file get request completed for user with id: {}", getMediaFilesRequest.getUserPhoneNumber());
         return ResponseEntity.ok(mediaFileURLs);
     }
 
 
     @PostMapping(path = "deleteMedia", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> deleteMediaFilesUrl(@Valid @RequestBody DeleteMediaFilesRequest DeleteMediaFilesRequest) {
+        LOGGER.info("Media file delete request received for user with id: {}", DeleteMediaFilesRequest.getUserPhoneNumber());
         List<String> remainingUrls = mediaFilesService.deleteMediaFilesUrl(DeleteMediaFilesRequest);
+        LOGGER.info("Media file delete request completed for user with id: {}", DeleteMediaFilesRequest.getUserPhoneNumber());
         return ResponseEntity.ok(remainingUrls);
     }
 }

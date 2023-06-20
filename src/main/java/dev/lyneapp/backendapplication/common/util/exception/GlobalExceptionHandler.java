@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-// TODO implement proper exception handling acrossboard - https://youtu.be/MhZl4YikM20
+// TODO implement proper exception handling across-board - https://youtu.be/MhZl4YikM20
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -73,6 +73,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handlePasswordMismatchException(PasswordMismatchException ex) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PasswordTheSameException.class)
+    public ResponseEntity<?> handlePasswordTheSameException(PasswordTheSameException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_MODIFIED.value(), ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_MODIFIED);
     }
 
     @ExceptionHandler(PhoneNumberAlreadyExistsException.class)
