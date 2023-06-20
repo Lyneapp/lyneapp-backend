@@ -1,0 +1,61 @@
+{
+  "taskDefinitionArn": "arn:aws:ecs:ca-central-1:291219373582:task-definition/lyneapp-backend-td:1",
+  "containerDefinitions": [
+    {
+      "name": "lyneapp",
+      "image": "291219373582.dkr.ecr.ca-central-1.amazonaws.com/lyneapp-backend",
+      "cpu": 0,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 0,
+          "protocol": "tcp",
+          "name": "lyneapp-80-tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "essential": true,
+      "environment": [],
+      "environmentFiles": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "ulimits": []
+    }
+  ],
+  "family": "lyneapp-backend-td",
+  "taskRoleArn": "arn:aws:iam::291219373582:role/AmazonECSTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::291219373582:role/AmazonECSTaskExecutionRole",
+  "revision": 1,
+  "volumes": [],
+  "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "name": "ecs.capability.execution-role-ecr-pull"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    }
+  ],
+  "placementConstraints": [],
+  "compatibilities": [
+    "EC2"
+  ],
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "cpu": "256",
+  "memory": "512",
+  "registeredAt": "2023-06-20T13:44:26.091000-04:00",
+  "registeredBy": "arn:aws:iam::291219373582:root",
+  "tags": []
+}
