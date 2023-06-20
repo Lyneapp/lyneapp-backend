@@ -3,7 +3,7 @@ name: Build & Deploy LyneApp Spring Boot Application
 on:
   push:
     branches:
-      - detached
+      - authentication-and-onboarding
 
 jobs:
   build-deploy:
