@@ -1,0 +1,73 @@
+{
+  "taskDefinitionArn": "arn:aws:ecs:ca-central-1:291219373582:task-definition/lyneapp-backend-td:2",
+  "containerDefinitions": [
+    {
+      "name": "lyneapp-backend-container",
+      "image": "291219373582.dkr.ecr.ca-central-1.amazonaws.com/lyneapp-backend:develop",
+      "cpu": 0,
+      "memory": 1000,
+      "memoryReservation": 500,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 0,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "entryPoint": [],
+      "command": [],
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/lyneapp-backend-td",
+          "awslogs-region": "ca-central-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "family": "lyneapp-backend-td",
+  "taskRoleArn": "arn:aws:iam::291219373582:role/AmazonECSTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::291219373582:role/AmazonECSTaskExecutionRole",
+  "networkMode": "bridge",
+  "revision": 2,
+  "volumes": [],
+  "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    },
+    {
+      "name": "ecs.capability.execution-role-awslogs"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "name": "ecs.capability.execution-role-ecr-pull"
+    }
+  ],
+  "placementConstraints": [],
+  "compatibilities": [
+    "EXTERNAL",
+    "EC2"
+  ],
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "registeredAt": "2023-06-20T14:37:53.848000-04:00",
+  "registeredBy": "arn:aws:iam::291219373582:root"
+}

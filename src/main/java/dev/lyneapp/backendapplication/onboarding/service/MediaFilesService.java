@@ -39,7 +39,7 @@ public class MediaFilesService {
     private final UserRepository userRepository;
     private final AmazonS3 s3Client;
     private final MongoTemplate mongoTemplate;
-    @Value("${aws_s3_media_bucket}")
+    @Value("${aws.s3.media.bucket}")
     private String awsS3MediaBucket;
     @Value("${amazonaws.com}")
     private String amazonawsDotCom;
