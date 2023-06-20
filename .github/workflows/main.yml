@@ -77,14 +77,14 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: lyneapp-backend-container
+          container-name: lyneapp-backend-fargate-container
           image: ${{ steps.build-image.outputs.image }}
 
       # Deploy Amazon ECS task definition
-      - name: Deploy Amazon ECS task definition
+      - name: Deploy Amazon ECS (Elastic Container Service) task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: lyneapp-backend-service
-          cluster: lyneapp-backend-cluster
+          service: lyneapp-backend-fargate-service
+          cluster: lyneapp-backend-fargate-cluster
           wait-for-service-stability: true
