@@ -64,7 +64,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: lyneapp-backend
+          ECR_REPOSITORY: lyneapp-backend-fargate
           IMAGE_TAG: develop
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
