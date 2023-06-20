@@ -18,3 +18,4 @@ EXPOSE 8082
 
 # Set the entry point command to run the application
 ENTRYPOINT ["java", "-jar", "target/lyneapp-backend-0.0.1-SNAPSHOT.jar"]
+
