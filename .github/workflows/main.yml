@@ -46,17 +46,45 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/lyneapp-backend:latest
 
+      # Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ca-central-1
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Configure AWS ECS
-        run: |
-          aws ecs configure --region ca-central-1 --cluster lyneapp-backend-cluster --default-launch-type EC2
+      # Login to Amazon ECR (Elastic Container Registry)
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Deploy to AWS ECS
+      # Build, tag, and push image to Amazon ECR
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: lyneapp-backend
+          IMAGE_TAG: develop
         run: |
-          aws ecs update-service --region ca-central-1 --cluster lyneapp-backend-cluster --service lyneapp-backend-service --force-new-deployment
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      # Push the new image ID in the Amazon ECS task definition
+      - name: Push the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: lyneapp-backend-container
+          image: ${{ steps.build-image.outputs.image }}
+
+      # Deploy Amazon ECS task definition
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: lyneapp-backend-service
+          cluster: lyneapp-backend-cluster
+          wait-for-service-stability: true
