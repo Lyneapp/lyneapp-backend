@@ -1,0 +1,16 @@
+{
+  "_id": {
+    "$oid": "649464d042f5c051911d19e7"
+  },
+  "chatId": "+14164555542_+14164555542",
+  "content": "Yeah",
+  "sender": "+14164555542",
+  "senderPhoneNumber": "+14164555542",
+  "recipientPhoneNumber": "+14164555542",
+  "senderName": "Uchenna",
+  "recipientName": "Chukwudi",
+  "timestamp": {
+    "$numberLong": "1687446736195"
+  },
+  "_class": "dev.phoenixtype.chat.model.ChatMessage"
+}

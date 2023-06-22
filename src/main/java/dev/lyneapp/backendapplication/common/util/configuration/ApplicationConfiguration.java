@@ -44,9 +44,17 @@ public class ApplicationConfiguration {
         mongoTemplate.dropCollection("jwt_token");
     }
 
+    // FIXME - DO NOT INCLUDE IN PRODUCTION
+    @PostConstruct
+    public void dropChatMessagesCollection() {
+        mongoTemplate.dropCollection("chatMessages");
+    }
+
     @Bean
     public UserDetailsService userDetailsService() {
-        return userPhoneNumber -> userRepository.findByUserPhoneNumber(userPhoneNumber).orElseThrow(() -> new PhoneNumberNotFoundException(ExceptionMessages.PHONE_NUMBER_DOES_NOT_EXIST));
+        return userPhoneNumber -> userRepository.findByUserPhoneNumber(userPhoneNumber).orElseThrow(
+                () -> new PhoneNumberNotFoundException(ExceptionMessages.PHONE_NUMBER_DOES_NOT_EXIST)
+        );
     }
 
     @Bean

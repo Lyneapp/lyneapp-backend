@@ -13,6 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
+// FIXME: enable csrf for production
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -25,13 +27,13 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain setSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf()
+                .csrf() // FIXME: Implementation is not complete
                 .disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/v*/auth/**")
+                .authorizeHttpRequests() // comment this line to test the chat ws api
+                .requestMatchers("/api/v*/auth/**") // comment this line to test the chat ws api
                 .permitAll()
                 .anyRequest()
-                .authenticated()
+                .authenticated() // comment this line to disable authentication and test the chat ws api
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -41,8 +43,7 @@ public class SecurityConfiguration {
                 .logout()
                 .logoutUrl("/api/v1/auth/logout")
                 .addLogoutHandler(logoutHandler)
-                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-        ;
+                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext());
         return httpSecurity.build();
     }
 }
