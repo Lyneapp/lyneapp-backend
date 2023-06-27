@@ -65,10 +65,10 @@ public class OnboardingController {
     }
 
     @GetMapping(path = "confirmEmail")
-    public ResponseEntity<EmailResponse> confirmEmailToken(@Valid @RequestParam("token") String token) {
-        LOGGER.info("Email confirmation request received for user with token: {}", token);
-        EmailResponse yourEmailResponse = onboardingService.confirmEmailToken(token);
-        LOGGER.info("Email confirmation request completed successfully for user with token: {}", token);
+    public ResponseEntity<EmailResponse> confirmEmailToken(@Valid @RequestBody ConfirmEmailRequest confirmEmailRequest) {
+        LOGGER.info("Email confirmation request received for user with token: {}", confirmEmailRequest.getConfirmationToken());
+        EmailResponse yourEmailResponse = onboardingService.confirmEmailToken(confirmEmailRequest);
+        LOGGER.info("Email confirmation request completed successfully for user with token: {}", confirmEmailRequest.getConfirmationToken());
         return ResponseEntity.ok(yourEmailResponse);
     }
 

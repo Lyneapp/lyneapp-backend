@@ -9,8 +9,8 @@ import dev.lyneapp.backendapplication.common.model.UserPreference;
 import dev.lyneapp.backendapplication.common.repository.UserPreferenceRepository;
 import dev.lyneapp.backendapplication.common.repository.UserRepository;
 import dev.lyneapp.backendapplication.common.util.exception.UserIdNotFoundException;
-import dev.lyneapp.backendapplication.onboarding.service.MediaFilesService;
 import dev.lyneapp.backendapplication.recommendation.model.RecommendationRequest;
+import dev.lyneapp.backendapplication.recommendation.model.UserProfile;
 import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static dev.lyneapp.backendapplication.common.util.exception.ExceptionMessages.USER_NOT_FOUND_WITH_ID;
-
 
 
 /**
@@ -57,7 +56,6 @@ import static dev.lyneapp.backendapplication.common.util.exception.ExceptionMess
  */
 
 
-
 @Service
 public class RecommendationService {
     // TODO If disliked, wait 72 hours and show profile again
@@ -67,28 +65,27 @@ public class RecommendationService {
     // TODO Handle the case where the user has already seen all the recommendations and there are no more recommendations to show gracefully
 
     /**
-     _TODO_
-     <br>1. Create a cache for the recommendable profiles and populate the cache<br>
-     <br>2. Provide X number of ranked (by time and/or weight) recommendations per day<br>
-     <br>3. Requeue unmatched profiles into the cache after X number of days<br>
-     <br>4. Use mongoDB to filter based on configurable data points and user preference - write x number of filters to accommodate for different use cases.<br>
+     * _TODO_
+     * <br>1. Create a cache for the recommendable profiles and populate the cache<br>
+     * <br>2. Provide X number of ranked (by time and/or weight) recommendations per day<br>
+     * <br>3. Requeue unmatched profiles into the cache after X number of days<br>
+     * <br>4. Use mongoDB to filter based on configurable data points and user preference - write x number of filters to accommodate for different use cases.<br>
      */
 
     private final static Logger LOGGER = LoggerFactory.getLogger(RecommendationService.class);
-
-    @Value("${filter.arn}")
-    private String filterArn;
-
-    @Value("${campaign.arn}")
-    private String campaignArn;
-
+    private static final int RECOMMENDATION_MAX_SIZE = 10;
     private final AmazonPersonalizeRuntime personalizeRuntimeClient;
     private final UserPreferenceRepository userPreferenceRepository;
     private final UserRepository userRepository;
-
     private final Cache matchedUsersCache;
     private final Cache likedUsersCache;
     private final Cache recommendedUsersCache;
+    @Value("${filter.arn}")
+    private String filterArn;
+    @Value("${campaign.arn}")
+    private String campaignArn;
+    @Value("${recommendation.max.size}")
+    private String recommendationMaxSize;
 
     public RecommendationService(AmazonPersonalizeRuntime personalizeRuntimeClient,
                                  UserPreferenceRepository userPreferenceRepository,
@@ -101,8 +98,132 @@ public class RecommendationService {
         this.recommendedUsersCache = cacheManager.getCache("recommendedUsers");
     }
 
+
+    public List<UserProfile> getVanillaRecommendations(RecommendationRequest recommendationRequest) {
+        LOGGER.info("Entering RecommendationService.getVanillaRecommendations, Getting MongoDB recommendations for user {}", recommendationRequest.getUserPhoneNumber());
+
+        UserPreference userPreference = userPreferenceRepository.findByUserPhoneNumber(recommendationRequest.getUserPhoneNumber()).orElse(null);
+        LOGGER.info("RecommendationService.getVanillaRecommendations, User preference for user {} is {}", recommendationRequest.getUserPhoneNumber(), userPreference);
+
+        if (userPreference == null) {
+            throw new UserIdNotFoundException(USER_NOT_FOUND_WITH_ID);
+        }
+
+        // FIXME: Use conditional logic to determine which filter to use - 1
+        List<User> recommendations = userRepository.findUsersByGender(
+                userPreference.getPreferredGender().getPreferredGender().toLowerCase()
+        );
+
+        LOGGER.info("recommendations: {}", recommendations.size());
+        if (recommendations.size() != 0) {
+            LOGGER.info("recommendations: {}", recommendations.get(0).getUserPhoneNumber());
+        }
+
+        /*
+
+        // FIXME: Use conditional logic to determine which filter to use - 2
+        List<User> recommendations2 = userRepository.findUsersByGenderAndDoYouHaveChildrenAndDoYouDrinkAndDoYouSmoke(
+                userPreference.getPreferredGender().getPreferredGender(),
+                userPreference.isShouldTheyHaveChildren(),
+                userPreference.isShouldTheyDrink(),
+                userPreference.isShouldTheySmoke()
+        );
+
+        // FIXME: Use conditional logic to determine which filter to use - 0
+        List<User> recommendations = userRepository.findUsersByGenderAndTribeAndReligionAndDoYouHaveChildrenAndDoYouDrinkAndDoYouSmoke(
+                userPreference.getPreferredGender().getPreferredGender(),
+                userPreference.getPreferredTribes().getPreferredTribes(),
+                userPreference.getPreferredReligion().getPreferredReligion(),
+                userPreference.isShouldTheyHaveChildren(),
+                userPreference.isShouldTheyDrink(),
+                userPreference.isShouldTheySmoke()
+        );
+
+         */
+
+        List<UserProfile> filteredRecommendationsUserProfile = new ArrayList<>();
+        for (User recommendation : recommendations) {
+
+            Range<Integer> ageRange = Range.between(userPreference.getPreferredAgeRange().getMinimumAge(),
+                    userPreference.getPreferredAgeRange().getMaximumAge());
+            Range<Integer> heightRange = Range.between(userPreference.getPreferredHeightRange().getMinimumHeight(),
+                    userPreference.getPreferredHeightRange().getMaximumHeight());
+
+//            LOGGER.info("recommendations before age filter: {}", recommendations.get(0).getUserPhoneNumber());
+//            if (!ageRange.contains(Integer.parseInt(recommendation.getAge()))) {
+//                continue;
+//            }
+//
+//            LOGGER.info("recommendations before height filter: {}", recommendations.get(0).getUserPhoneNumber());
+//            if (!heightRange.contains(Integer.parseInt(recommendation.getHeight()))) {
+//                continue;
+//            }
+//
+//            LOGGER.info("recommendations before location filter: {}", recommendations.get(0).getUserPhoneNumber());
+//            if (!userPreference.getPreferredLocations().contains(recommendation.getCurrentLocation())) {
+//                continue;
+//            }
+//
+//            LOGGER.info("recommendations before should they drink filter: {}", recommendations.get(0).getUserPhoneNumber());
+//            if (recommendation.isDoYouDrink() != userPreference.isShouldTheyDrink()) {
+//                continue;
+//            }
+//
+//            LOGGER.info("recommendations before should they smoke filter: {}", recommendations.get(0).getUserPhoneNumber());
+//            if (recommendation.isDoYouSmoke() != userPreference.isShouldTheySmoke()) {
+//                continue;
+//            }
+//
+//            LOGGER.info("recommendations before should they have children filter: {}", recommendations.get(0).getUserPhoneNumber());
+//            if (recommendation.isDoYouHaveChildren() != userPreference.isShouldTheyHaveChildren()) {
+//                continue;
+//            }
+
+            UserProfile userProfile = getUserProfile(recommendation);
+            filteredRecommendationsUserProfile.add(userProfile);
+        }
+
+        LOGGER.info("filteredRecommendationsUserProfile: {}", filteredRecommendationsUserProfile);
+        List<UserProfile> finalRecommendationsUserProfile = filteredRecommendationsUserProfile.stream().limit(Long.parseLong(recommendationMaxSize)).toList();
+        LOGGER.info("Exiting RecommendationService.getVanillaRecommendations, Returning {} recommendations for user {}",
+                finalRecommendationsUserProfile.size(), recommendationRequest.getUserPhoneNumber());
+        return finalRecommendationsUserProfile;
+    }
+
+    // FIXME: Use conditional logic for fields that are not mandatory to avoid null pointer exceptions
+    private static UserProfile getUserProfile(User recommendation) {
+        LOGGER.info("Entering RecommendationService.getUserProfile, Getting user profile for user {}", recommendation.getUserPhoneNumber());
+        UserProfile userProfile = new UserProfile();
+        Optional.ofNullable(recommendation.getId()).ifPresent(userProfile::setId);
+        Optional.ofNullable(recommendation.getUserPhoneNumber()).ifPresent(userProfile::setUserPhoneNumber);
+        Optional.ofNullable(recommendation.getFirstName()).ifPresent(userProfile::setFirstName);
+        Optional.ofNullable(recommendation.getLastName()).ifPresent(userProfile::setLastName);
+        Optional.ofNullable(recommendation.getAge()).ifPresent(userProfile::setAge);
+        Optional.ofNullable(recommendation.getMediaFileURLs()).ifPresent(userProfile::setMediaFileURLs);
+        Optional.ofNullable(recommendation.getTribe()).ifPresent(userProfile::setTribe);
+        Optional.of(recommendation.isDoYouHaveChildren()).ifPresent(userProfile::setDoYouHaveChildren);
+        Optional.ofNullable(recommendation.getReligion()).ifPresent(userProfile::setReligion);
+        Optional.ofNullable(recommendation.getGender()).ifPresent(userProfile::setGender);
+        Optional.ofNullable(recommendation.getAboutYou()).ifPresent(userProfile::setAboutUser);
+        Optional.ofNullable(recommendation.getHeight()).ifPresent(userProfile::setHeight);
+        Optional.ofNullable(recommendation.getJob()).ifPresent(userProfile::setJob);
+        Optional.ofNullable(recommendation.getIndustry()).ifPresent(userProfile::setIndustry);
+        Optional.ofNullable(recommendation.getInstitutionName()).ifPresent(userProfile::setInstitutionName);
+        Optional.ofNullable(recommendation.getHighestDegree()).ifPresent(userProfile::setHighestDegree);
+        Optional.ofNullable(recommendation.getCurrentLocation()).ifPresent(userProfile::setCurrentLocation);
+        Optional.ofNullable(recommendation.getLanguages()).ifPresent(userProfile::setLanguages);
+        Optional.ofNullable(recommendation.getInterests()).ifPresent(userProfile::setInterests);
+        Optional.ofNullable(recommendation.getPrompts()).ifPresent(userProfile::setPrompts);
+        Optional.of(recommendation.isDoYouDrink()).ifPresent(userProfile::setDoYouDrink);
+        Optional.of(recommendation.isDoYouSmoke()).ifPresent(userProfile::setDoYouSmoke);
+        LOGGER.info("Exiting RecommendationService.getUserProfile, Returning user profile for user {}", recommendation.getUserPhoneNumber());
+        return userProfile;
+    }
+
+
+
     @Cacheable(value = "Users", key = "#recommendationRequest.getUserPhoneNumber()", unless = "#result.size() == 0")
-    public List<User> getVanillaRecommendations(RecommendationRequest recommendationRequest) {
+    public List<User> getCachedVanillaRecommendations(RecommendationRequest recommendationRequest) {
         LOGGER.info("Getting vanilla recommendations for user {}", recommendationRequest.getUserPhoneNumber());
         UserPreference userPreference = userPreferenceRepository.findById(recommendationRequest.getUserPhoneNumber()).orElse(null);
         if (userPreference == null) {
@@ -248,7 +369,7 @@ public class RecommendationService {
         return likedUsersCache.get(userId, Boolean.class) != null;
     }
 
-    public GetRecommendationsResult getRecommendations(RecommendationRequest recommendationRequest) {
+    public GetRecommendationsResult getPersonalizeRecommendations(RecommendationRequest recommendationRequest) {
         LOGGER.info("Getting recommendations for user {}", recommendationRequest.getUserPhoneNumber());
         StringBuilder filterExpression = new StringBuilder();
         if (recommendationRequest.getMinAge() > 0 && recommendationRequest.getMaxAge() > 0) {
@@ -306,7 +427,7 @@ public class RecommendationService {
         // TODO - and store the list in a cache or in DB so that we don't send the same users redundantly the next couple of days (5 - 7) and then clear it
         // TODO - only to recommend users that have never been matched with the user previously
         // TODO - we populate each user's UserProfile model class
-        LOGGER.info("Getting recommendations for user {} with filter expression {}", recommendationRequest.getUserPhoneNumber(), filterExpression.toString());
+        LOGGER.info("Getting recommendations for user {} with filter expression {}", recommendationRequest.getUserPhoneNumber(), filterExpression);
         return personalizeRuntimeClient.getRecommendations(request);
     }
 

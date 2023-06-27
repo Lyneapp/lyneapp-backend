@@ -36,6 +36,7 @@ public class UserProfile {
     private String aboutUser;
     private String gender;
     private String age;
+    private String profileUrl;
 
     private List<String> tribe = new ArrayList<>();
     private List<String> languages = new ArrayList<>();

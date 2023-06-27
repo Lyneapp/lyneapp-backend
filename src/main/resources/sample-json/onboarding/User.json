@@ -1,0 +1,2085 @@
+[
+  {
+    "_id": {
+      "$oid": "649646bfa6b1477596923d22"
+    },
+    "userPhoneNumber": "+16475706079",
+    "verificationCode": "368572",
+    "password": "$2a$10$3V6DoWlRG.kaEIe33jEjIOGt2Jh2YCEv2tseYJrDmDoS9MpHycv9S",
+    "passwordHash": "$2a$10$3V6DoWlRG.kaEIe33jEjIOGt2Jh2YCEv2tseYJrDmDoS9MpHycv9S",
+    "emailAddress": "lyneapp.dev@gmail.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "height": "174",
+    "religion": "Christian",
+    "job": "Software Engineer",
+    "industry": "Information Technology",
+    "highestDegree": "Bachelor of Science",
+    "institutionName": "ABC University",
+    "aboutYou": "I am a software engineer who loves to read and travel.",
+    "role": "user",
+    "gender": "Male",
+    "age": "33",
+    "score": {
+      "$numberDouble": "0.0"
+    },
+    "tribe": [
+      "Igbo",
+      "Hausa-Ibibio",
+      "Fulani-Hausa"
+    ],
+    "languages": [
+      "English",
+      "Spanish",
+      "French"
+    ],
+    "interests": [
+      "Reading",
+      "Traveling",
+      "Cooking"
+    ],
+    "mediaFileURLs": [
+      "https://lyneappbackend-userbucket.s3.ca-central-1.amazonaws.com/649646bfa6b1477596923d22/8ed6e5eb-d878-41c0-9ec4-df22ff5ccefa",
+      "https://lyneappbackend-userbucket.s3.ca-central-1.amazonaws.com/649646bfa6b1477596923d22/2ea2ab92-d9fd-4eff-b0a3-74698862f44d",
+      "https://lyneappbackend-userbucket.s3.ca-central-1.amazonaws.com/649646bfa6b1477596923d22/762cf60b-04d2-4ab2-a3c4-1a887370c806",
+      "https://lyneappbackend-userbucket.s3.ca-central-1.amazonaws.com/649646bfa6b1477596923d22/1bb44839-e96f-4ed1-9638-3aa0b487ae6c",
+      "https://lyneappbackend-userbucket.s3.ca-central-1.amazonaws.com/649646bfa6b1477596923d22/c30668d0-ccfb-4822-b405-9cdd353f86b7",
+      "https://lyneappbackend-userbucket.s3.ca-central-1.amazonaws.com/649646bfa6b1477596923d22/1eb74a51-5c8c-4a55-846f-706357b443e2"
+    ],
+    "prompts": [
+      {
+        "promptID": {
+          "$numberInt": "14"
+        },
+        "promptQuestion": "What is your favorite book?",
+        "promptResponse": "My favorite book is 'To Kill a Mockingbird' by Harper Lee."
+      },
+      {
+        "promptID": {
+          "$numberInt": "17"
+        },
+        "promptQuestion": "What is your favorite travel destination?",
+        "promptResponse": "My favorite travel destination is Paris, France."
+      }
+    ],
+    "blockedUsers": [],
+    "dateOfBirth": {
+      "$date": {
+        "$numberLong": "631170000000"
+      }
+    },
+    "currentLocation": {
+      "latitude": {
+        "$numberDouble": "12.345"
+      },
+      "longitude": {
+        "$numberDouble": "67.89"
+      },
+      "city": "New York",
+      "country": "USA"
+    },
+    "placeOfBirthLocation": {
+      "latitude": {
+        "$numberDouble": "34.567"
+      },
+      "longitude": {
+        "$numberDouble": "89.012"
+      },
+      "city": "London",
+      "country": "UK"
+    },
+    "passwordCreatedDate": {
+      "$date": {
+        "$numberLong": "1687570196843"
+      }
+    },
+    "preferences": {
+      "preferredGender": {
+        "preferredGender": "female",
+        "both": false
+      },
+      "preferredTribes": {
+        "preferredTribes": [
+          "Igbo",
+          "Hausa",
+          "Yoruba"
+        ],
+        "openToAll": false
+      },
+      "preferredAgeRange": {
+        "minimumAge": {
+          "$numberInt": "25"
+        },
+        "maximumAge": {
+          "$numberInt": "35"
+        },
+        "openToAll": false
+      },
+      "preferredHeightRange": {
+        "minimumHeight": {
+          "$numberInt": "160"
+        },
+        "maximumHeight": {
+          "$numberInt": "180"
+        },
+        "openToAll": false
+      },
+      "preferredReligion": {
+        "preferredReligion": "Christian",
+        "openToAll": false,
+        "Denomination": "Catholic"
+      },
+      "doYouWantSomeoneWithChildren": {
+        "shouldTheyHaveChildren": false,
+        "openToAll": false
+      },
+      "preferredQualification": {
+        "highestDegree": "Bachelor's",
+        "institutionName": "Ryerson University"
+      },
+      "preferredInterests": [
+        "sports",
+        "music",
+        "travel"
+      ],
+      "preferredLanguages": [
+        "English",
+        "Spanish",
+        "French"
+      ],
+      "preferredLocations": [
+        {
+          "latitude": {
+            "$numberDouble": "45.678"
+          },
+          "longitude": {
+            "$numberDouble": "123.456"
+          },
+          "city": "New York",
+          "country": "USA"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "67.89"
+          },
+          "longitude": {
+            "$numberDouble": "-12.345"
+          },
+          "city": "London",
+          "country": "UK"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "-43.21"
+          },
+          "longitude": {
+            "$numberDouble": "98.765"
+          },
+          "city": "Sydney",
+          "country": "Australia"
+        }
+      ],
+      "preferenceCreatedAt": {
+        "$date": {
+          "$numberLong": "1687570200082"
+        }
+      },
+      "isAMatch": false,
+      "isBlocked": false,
+      "shouldTheyDrink": true,
+      "shouldTheySmoke": false,
+      "shouldTheyHaveChildren": false,
+      "interactedWithUser": false,
+      "hasAccountVerified": false,
+      "preferenceCreated": true
+    },
+    "phoneNumberLookUpData": {
+      "callingCountryCode": "1",
+      "countryCode": "CA",
+      "nationalFormat": "(647) 570-6079",
+      "valid": true,
+      "validationErrors": [],
+      "url": "https://lookups.twilio.com/v2/PhoneNumbers/+16475706079"
+    },
+    "isBanned": false,
+    "accountEnabled": true,
+    "accountLocked": false,
+    "userIsVerified": true,
+    "doYouHaveChildren": false,
+    "doYouDrink": false,
+    "doYouSmoke": true,
+    "credentialsExpired": false,
+    "accountExpired": false,
+    "userLoggedIn": false,
+    "profileCreated": true,
+    "preferenceCreated": true,
+    "accountVerifiedBadge": false,
+    "_class": "dev.lyneapp.backendapplication.common.model.User"
+  },
+  {
+    "_id": {
+      "$oid": "649646bfa6b1477596923d23"
+    },
+    "userPhoneNumber": "+2348123456789",
+    "verificationCode": "456789",
+    "password": "$2a$10$4R3H7tYJrDmDoS9MpHycv9S",
+    "passwordHash": "$2a$10$4R3H7tYJrDmDoS9MpHycv9S",
+    "emailAddress": "jane.doe@example.com",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "height": "165",
+    "religion": "Christian",
+    "job": "Marketing Manager",
+    "industry": "Advertising",
+    "highestDegree": "Master of Business Administration",
+    "institutionName": "University of Lagos",
+    "aboutYou": "I am a marketing professional who enjoys outdoor activities and exploring different cuisines.",
+    "role": "user",
+    "gender": "Female",
+    "age": "30",
+    "score": {
+      "$numberDouble": "0.0"
+    },
+    "tribe": [
+      "Yoruba",
+      "Igbo",
+      "Hausa-Fulani"
+    ],
+    "languages": [
+      "English",
+      "Yoruba",
+      "Igbo"
+    ],
+    "interests": [
+      "Reading",
+      "Traveling",
+      "Photography"
+    ],
+    "mediaFileURLs": [
+      "https://example.com/images/649646bfa6b1477596923d23/photo1.jpg",
+      "https://example.com/images/649646bfa6b1477596923d23/photo2.jpg",
+      "https://example.com/images/649646bfa6b1477596923d23/photo3.jpg",
+      "https://example.com/images/649646bfa6b1477596923d23/photo4.jpg"
+    ],
+    "prompts": [
+      {
+        "promptID": {
+          "$numberInt": "14"
+        },
+        "promptQuestion": "What is your favorite book?",
+        "promptResponse": "One of my favorite books is 'Purple Hibiscus' by Chimamanda Ngozi Adichie."
+      },
+      {
+        "promptID": {
+          "$numberInt": "17"
+        },
+        "promptQuestion": "What is your favorite travel destination?",
+        "promptResponse": "I absolutely love exploring the beautiful landscapes of Cape Town, South Africa."
+      }
+    ],
+    "blockedUsers": [],
+    "dateOfBirth": {
+      "$date": {
+        "$numberLong": "720883200000"
+      }
+    },
+    "currentLocation": {
+      "latitude": {
+        "$numberDouble": "6.5244"
+      },
+      "longitude": {
+        "$numberDouble": "3.3792"
+      },
+      "city": "Lagos",
+      "country": "Nigeria"
+    },
+    "placeOfBirthLocation": {
+      "latitude": {
+        "$numberDouble": "6.5244"
+      },
+      "longitude": {
+        "$numberDouble": "3.3792"
+      },
+      "city": "Lagos",
+      "country": "Nigeria"
+    },
+    "passwordCreatedDate": {
+      "$date": {
+        "$numberLong": "1687570196843"
+      }
+    },
+    "preferences": {
+      "preferredGender": {
+        "preferredGender": "male",
+        "both": false
+      },
+      "preferredTribes": {
+        "preferredTribes": [
+          "Yoruba",
+          "Igbo",
+          "Hausa"
+        ],
+        "openToAll": false
+      },
+      "preferredAgeRange": {
+        "minimumAge": {
+          "$numberInt": "28"
+        },
+        "maximumAge": {
+          "$numberInt": "38"
+        },
+        "openToAll": false
+      },
+      "preferredHeightRange": {
+        "minimumHeight": {
+          "$numberInt": "160"
+        },
+        "maximumHeight": {
+          "$numberInt": "180"
+        },
+        "openToAll": false
+      },
+      "preferredReligion": {
+        "preferredReligion": "Christian",
+        "openToAll": false,
+        "Denomination": "Protestant"
+      },
+      "doYouWantSomeoneWithChildren": {
+        "shouldTheyHaveChildren": false,
+        "openToAll": false
+      },
+      "preferredQualification": {
+        "highestDegree": "Bachelor's",
+        "institutionName": "University of Ibadan"
+      },
+      "preferredInterests": [
+        "Sports",
+        "Music",
+        "Traveling"
+      ],
+      "preferredLanguages": [
+        "English",
+        "Yoruba",
+        "Igbo"
+      ],
+      "preferredLocations": [
+        {
+          "latitude": {
+            "$numberDouble": "6.5244"
+          },
+          "longitude": {
+            "$numberDouble": "3.3792"
+          },
+          "city": "Lagos",
+          "country": "Nigeria"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "51.5074"
+          },
+          "longitude": {
+            "$numberDouble": "-0.1278"
+          },
+          "city": "London",
+          "country": "UK"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "40.7128"
+          },
+          "longitude": {
+            "$numberDouble": "-74.0060"
+          },
+          "city": "New York",
+          "country": "USA"
+        }
+      ],
+      "preferenceCreatedAt": {
+        "$date": {
+          "$numberLong": "1687570200082"
+        }
+      },
+      "isAMatch": false,
+      "isBlocked": false,
+      "shouldTheyDrink": true,
+      "shouldTheySmoke": false,
+      "shouldTheyHaveChildren": false,
+      "interactedWithUser": false,
+      "hasAccountVerified": false,
+      "preferenceCreated": true
+    },
+    "phoneNumberLookUpData": {
+      "callingCountryCode": "234",
+      "countryCode": "NG",
+      "nationalFormat": "(081) 234-5678",
+      "valid": true,
+      "validationErrors": [],
+      "url": "https://example.com/phone-lookup/+2348123456789"
+    },
+    "isBanned": false,
+    "accountEnabled": true,
+    "accountLocked": false,
+    "userIsVerified": true,
+    "doYouHaveChildren": false,
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "credentialsExpired": false,
+    "accountExpired": false,
+    "userLoggedIn": false,
+    "profileCreated": true,
+    "preferenceCreated": true,
+    "accountVerifiedBadge": false,
+    "_class": "dev.lyneapp.backendapplication.common.model.User"
+  },
+  {
+    "_id": {
+      "$oid": "649646bfa6b1477596923d24"
+    },
+    "userPhoneNumber": "+2348123156789",
+    "verificationCode": "482751",
+    "password": "$2a$10$GyYzH36U27e1xEKKe0p5Qe2HAl7wKQmnIkS0lOBzPZT1J4PTv/LyO",
+    "passwordHash": "$2a$10$GyYzH36U27e1xEKKe0p5Qe2HAl7wKQmnIkS0lOBzPZT1J4PTv/LyO",
+    "emailAddress": "jane.doe@example.com",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "height": "168",
+    "religion": "Christian",
+    "job": "Marketing Manager",
+    "industry": "Advertising",
+    "highestDegree": "Master of Business Administration",
+    "institutionName": "University of Lagos",
+    "aboutYou": "I'm a marketing professional with a passion for photography and exploring new cuisines.",
+    "role": "user",
+    "gender": "Female",
+    "age": "31",
+    "score": {
+      "$numberDouble": "0.0"
+    },
+    "tribe": [
+      "Yoruba",
+      "Igbo",
+      "Hausa"
+    ],
+    "languages": [
+      "English",
+      "Yoruba",
+      "French"
+    ],
+    "interests": [
+      "Photography",
+      "Traveling",
+      "Cooking"
+    ],
+    "mediaFileURLs": [
+      "https://example.com/profile-image/jane-doe/profile.jpg",
+      "https://example.com/profile-image/jane-doe/cover.jpg"
+    ],
+    "prompts": [
+      {
+        "promptID": {
+          "$numberInt": "9"
+        },
+        "promptQuestion": "What is your favorite cuisine?",
+        "promptResponse": "My favorite cuisine is Italian."
+      },
+      {
+        "promptID": {
+          "$numberInt": "12"
+        },
+        "promptQuestion": "What is your favorite hobby?",
+        "promptResponse": "My favorite hobby is photography."
+      }
+    ],
+    "blockedUsers": [],
+    "dateOfBirth": {
+      "$date": {
+        "$numberLong": "725328000000"
+      }
+    },
+    "currentLocation": {
+      "latitude": {
+        "$numberDouble": "6.5244"
+      },
+      "longitude": {
+        "$numberDouble": "3.3792"
+      },
+      "city": "Lagos",
+      "country": "Nigeria"
+    },
+    "placeOfBirthLocation": {
+      "latitude": {
+        "$numberDouble": "51.5074"
+      },
+      "longitude": {
+        "$numberDouble": "-0.1278"
+      },
+      "city": "London",
+      "country": "UK"
+    },
+    "passwordCreatedDate": {
+      "$date": {
+        "$numberLong": "1687570196843"
+      }
+    },
+    "preferences": {
+      "preferredGender": {
+        "preferredGender": "male",
+        "both": false
+      },
+      "preferredTribes": {
+        "preferredTribes": [
+          "Hausa",
+          "Yoruba",
+          "Igbo"
+        ],
+        "openToAll": false
+      },
+      "preferredAgeRange": {
+        "minimumAge": {
+          "$numberInt": "28"
+        },
+        "maximumAge": {
+          "$numberInt": "38"
+        },
+        "openToAll": false
+      },
+      "preferredHeightRange": {
+        "minimumHeight": {
+          "$numberInt": "160"
+        },
+        "maximumHeight": {
+          "$numberInt": "180"
+        },
+        "openToAll": false
+      },
+      "preferredReligion": {
+        "preferredReligion": "Christian",
+        "openToAll": false,
+        "Denomination": "Protestant"
+      },
+      "doYouWantSomeoneWithChildren": {
+        "shouldTheyHaveChildren": false,
+        "openToAll": false
+      },
+      "preferredQualification": {
+        "highestDegree": "Master's",
+        "institutionName": "University of Lagos"
+      },
+      "preferredInterests": [
+        "Photography",
+        "Traveling",
+        "Food"
+      ],
+      "preferredLanguages": [
+        "English",
+        "Yoruba",
+        "French"
+      ],
+      "preferredLocations": [
+        {
+          "latitude": {
+            "$numberDouble": "6.5244"
+          },
+          "longitude": {
+            "$numberDouble": "3.3792"
+          },
+          "city": "Lagos",
+          "country": "Nigeria"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "51.5074"
+          },
+          "longitude": {
+            "$numberDouble": "-0.1278"
+          },
+          "city": "London",
+          "country": "UK"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "40.7128"
+          },
+          "longitude": {
+            "$numberDouble": "-74.0060"
+          },
+          "city": "New York",
+          "country": "USA"
+        }
+      ],
+      "preferenceCreatedAt": {
+        "$date": {
+          "$numberLong": "1687570200082"
+        }
+      },
+      "isAMatch": false,
+      "isBlocked": false,
+      "shouldTheyDrink": true,
+      "shouldTheySmoke": false,
+      "shouldTheyHaveChildren": false,
+      "interactedWithUser": false,
+      "hasAccountVerified": false,
+      "preferenceCreated": true
+    },
+    "phoneNumberLookUpData": {
+      "callingCountryCode": "234",
+      "countryCode": "NG",
+      "nationalFormat": "08123456789",
+      "valid": true,
+      "validationErrors": [],
+      "url": "https://example.com/phone-lookup/2348123456789"
+    },
+    "isBanned": false,
+    "accountEnabled": true,
+    "accountLocked": false,
+    "userIsVerified": true,
+    "doYouHaveChildren": false,
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "credentialsExpired": false,
+    "accountExpired": false,
+    "userLoggedIn": false,
+    "profileCreated": true,
+    "preferenceCreated": true,
+    "accountVerifiedBadge": false,
+    "_class": "dev.lyneapp.backendapplication.common.model.User"
+  },
+  {
+    "_id": {
+      "$oid": "649646bfa6b1477596923d34"
+    },
+    "userPhoneNumber": "+1555123456789",
+    "verificationCode": "983524",
+    "password": "$2a$10$RWhj0tsDxYSwVXtM9IF9ze2LsBhwEYkK04/qJtFSF4MfbrzKUh1ve",
+    "passwordHash": "$2a$10$RWhj0tsDxYSwVXtM9IF9ze2LsBhwEYkK04/qJtFSF4MfbrzKUh1ve",
+    "emailAddress": "john.smith@example.com",
+    "firstName": "John",
+    "lastName": "Smith",
+    "height": "175",
+    "religion": "Atheist",
+    "job": "Software Engineer",
+    "industry": "Technology",
+    "highestDegree": "Bachelor of Science",
+    "institutionName": "Stanford University",
+    "aboutYou": "I'm a tech enthusiast who loves coding and playing video games in my free time.",
+    "role": "user",
+    "gender": "Male",
+    "age": "27",
+    "score": {
+      "$numberDouble": "0.0"
+    },
+    "tribe": [
+      "Igbo",
+      "Yoruba",
+      "Hausa"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "interests": [
+      "Coding",
+      "Video Games",
+      "Traveling"
+    ],
+    "mediaFileURLs": [
+      "https://example.com/profile-image/john-smith/profile.jpg",
+      "https://example.com/profile-image/john-smith/cover.jpg"
+    ],
+    "prompts": [
+      {
+        "promptID": {
+          "$numberInt": "9"
+        },
+        "promptQuestion": "What is your favorite cuisine?",
+        "promptResponse": "I enjoy all types of cuisines."
+      },
+      {
+        "promptID": {
+          "$numberInt": "12"
+        },
+        "promptQuestion": "What is your favorite hobby?",
+        "promptResponse": "My favorite hobby is playing video games."
+      }
+    ],
+    "blockedUsers": [],
+    "dateOfBirth": {
+      "$date": {
+        "$numberLong": "836838400000"
+      }
+    },
+    "currentLocation": {
+      "latitude": {
+        "$numberDouble": "37.7749"
+      },
+      "longitude": {
+        "$numberDouble": "-122.4194"
+      },
+      "city": "San Francisco",
+      "country": "USA"
+    },
+    "placeOfBirthLocation": {
+      "latitude": {
+        "$numberDouble": "40.7128"
+      },
+      "longitude": {
+        "$numberDouble": "-74.0060"
+      },
+      "city": "New York",
+      "country": "USA"
+    },
+    "passwordCreatedDate": {
+      "$date": {
+        "$numberLong": "1687570196843"
+      }
+    },
+    "preferences": {
+      "preferredGender": {
+        "preferredGender": "female",
+        "both": false
+      },
+      "preferredTribes": {
+        "preferredTribes": [
+          "Igbo",
+          "Yoruba",
+          "Hausa"
+        ],
+        "openToAll": false
+      },
+      "preferredAgeRange": {
+        "minimumAge": {
+          "$numberInt": "24"
+        },
+        "maximumAge": {
+          "$numberInt": "32"
+        },
+        "openToAll": false
+      },
+      "preferredHeightRange": {
+        "minimumHeight": {
+          "$numberInt": "160"
+        },
+        "maximumHeight": {
+          "$numberInt": "180"
+        },
+        "openToAll": false
+      },
+      "preferredReligion": {
+        "preferredReligion": "Christian",
+        "openToAll": false,
+        "denomination": "Protestant"
+      },
+      "doYouWantSomeoneWithChildren": {
+        "shouldTheyHaveChildren": false,
+        "openToAll": false
+      },
+      "preferredQualification": {
+        "highestDegree": "Master of Science",
+        "institutionName": "Harvard University"
+      },
+      "preferredInterests": [
+        "Art",
+        "Sports",
+        "Reading"
+      ],
+      "preferredLanguages": [
+        "English",
+        "French",
+        "German"
+      ],
+      "preferredLocations": [
+        {
+          "latitude": {
+            "$numberDouble": "37.7749"
+          },
+          "longitude": {
+            "$numberDouble": "-122.4194"
+          },
+          "city": "San Francisco",
+          "country": "USA"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "40.7128"
+          },
+          "longitude": {
+            "$numberDouble": "-74.0060"
+          },
+          "city": "New York",
+          "country": "USA"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "48.8566"
+          },
+          "longitude": {
+            "$numberDouble": "2.3522"
+          },
+          "city": "Paris",
+          "country": "France"
+        }
+      ],
+      "preferenceCreatedAt": {
+        "$date": {
+          "$numberLong": "1687570200082"
+        }
+      },
+      "isAMatch": false,
+      "isBlocked": false,
+      "shouldTheyDrink": true,
+      "shouldTheySmoke": false,
+      "shouldTheyHaveChildren": false,
+      "interactedWithUser": false,
+      "hasAccountVerified": false,
+      "preferenceCreated": true
+    },
+    "phoneNumberLookUpData": {
+      "callingCountryCode": "1",
+      "countryCode": "US",
+      "nationalFormat": "(555) 123-4567",
+      "valid": true,
+      "validationErrors": [],
+      "url": "https://example.com/phone-lookup/1555123456789"
+    },
+    "isBanned": false,
+    "accountEnabled": true,
+    "accountLocked": false,
+    "userIsVerified": true,
+    "doYouHaveChildren": false,
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "credentialsExpired": false,
+    "accountExpired": false,
+    "userLoggedIn": false,
+    "profileCreated": true,
+    "preferenceCreated": true,
+    "accountVerifiedBadge": false,
+    "_class": "dev.lyneapp.backendapplication.common.model.User"
+  },
+  {
+    "_id": {
+      "$oid": "649646bfa6b1477596923d25"
+    },
+    "userPhoneNumber": "+441234567890",
+    "verificationCode": "749201",
+    "password": "$2a$10$GhY9Y69.9cMug2ubPId1KOpQu/ry5MbrQ7G3PAp2Oe2.gP0zJgEZm",
+    "passwordHash": "$2a$10$GhY9Y69.9cMug2ubPId1KOpQu/ry5MbrQ7G3PAp2Oe2.gP0zJgEZm",
+    "emailAddress": "emma.wilson@example.com",
+    "firstName": "Emma",
+    "lastName": "Wilson",
+    "height": "163",
+    "religion": "Christian",
+    "job": "Graphic Designer",
+    "industry": "Design",
+    "highestDegree": "Bachelor of Fine Arts",
+    "institutionName": "Central Saint Martins",
+    "aboutYou": "I'm a creative person who loves expressing ideas through visual design. I enjoy exploring different art forms and finding inspiration in nature.",
+    "role": "user",
+    "gender": "Female",
+    "age": "29",
+    "score": {
+      "$numberDouble": "0.0"
+    },
+    "tribe": [
+      "English",
+      "Scottish",
+      "Irish"
+    ],
+    "languages": [
+      "English",
+      "Spanish",
+      "German"
+    ],
+    "interests": [
+      "Art",
+      "Nature",
+      "Music"
+    ],
+    "mediaFileURLs": [
+      "https://example.com/profile-image/emma-wilson/profile.jpg",
+      "https://example.com/profile-image/emma-wilson/cover.jpg"
+    ],
+    "prompts": [
+      {
+        "promptID": {
+          "$numberInt": "9"
+        },
+        "promptQuestion": "What is your favorite cuisine?",
+        "promptResponse": "I love Mediterranean cuisine, especially Greek dishes."
+      },
+      {
+        "promptID": {
+          "$numberInt": "12"
+        },
+        "promptQuestion": "What is your favorite hobby?",
+        "promptResponse": "My favorite hobby is painting and creating visual art."
+      }
+    ],
+    "blockedUsers": [],
+    "dateOfBirth": {
+      "$date": {
+        "$numberLong": "776195200000"
+      }
+    },
+    "currentLocation": {
+      "latitude": {
+        "$numberDouble": "51.5074"
+      },
+      "longitude": {
+        "$numberDouble": "-0.1278"
+      },
+      "city": "London",
+      "country": "UK"
+    },
+    "placeOfBirthLocation": {
+      "latitude": {
+        "$numberDouble": "55.7558"
+      },
+      "longitude": {
+        "$numberDouble": "-4.1762"
+      },
+      "city": "Glasgow",
+      "country": "UK"
+    },
+    "passwordCreatedDate": {
+      "$date": {
+        "$numberLong": "1687570196843"
+      }
+    },
+    "preferences": {
+      "preferredGender": {
+        "preferredGender": "male",
+        "both": false
+      },
+      "preferredTribes": {
+        "preferredTribes": [
+          "English",
+          "Scottish",
+          "Irish"
+        ],
+        "openToAll": false
+      },
+      "preferredAgeRange": {
+        "minimumAge": {
+          "$numberInt": "26"
+        },
+        "maximumAge": {
+          "$numberInt": "35"
+        },
+        "openToAll": false
+      },
+      "preferredHeightRange": {
+        "minimumHeight": {
+          "$numberInt": "170"
+        },
+        "maximumHeight": {
+          "$numberInt": "190"
+        },
+        "openToAll": false
+      },
+      "preferredReligion": {
+        "preferredReligion": "Agnostic",
+        "openToAll": false,
+        "denomination": null
+      },
+      "doYouWantSomeoneWithChildren": {
+        "shouldTheyHaveChildren": false,
+        "openToAll": false
+      },
+      "preferredQualification": {
+        "highestDegree": "Bachelor's",
+        "institutionName": "Any reputable university"
+      },
+      "preferredInterests": [
+        "Traveling",
+        "Sports",
+        "Reading"
+      ],
+      "preferredLanguages": [
+        "English",
+        "French",
+        "Italian"
+      ],
+      "preferredLocations": [
+        {
+          "latitude": {
+            "$numberDouble": "51.5074"
+          },
+          "longitude": {
+            "$numberDouble": "-0.1278"
+          },
+          "city": "London",
+          "country": "UK"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "40.7128"
+          },
+          "longitude": {
+            "$numberDouble": "-74.0060"
+          },
+          "city": "New York",
+          "country": "USA"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "48.8566"
+          },
+          "longitude": {
+            "$numberDouble": "2.3522"
+          },
+          "city": "Paris",
+          "country": "France"
+        }
+      ],
+      "preferenceCreatedAt": {
+        "$date": {
+          "$numberLong": "1687570200082"
+        }
+      },
+      "isAMatch": false,
+      "isBlocked": false,
+      "shouldTheyDrink": true,
+      "shouldTheySmoke": false,
+      "shouldTheyHaveChildren": false,
+      "interactedWithUser": false,
+      "hasAccountVerified": false,
+      "preferenceCreated": true
+    },
+    "phoneNumberLookUpData": {
+      "callingCountryCode": "44",
+      "countryCode": "GB",
+      "nationalFormat": "01234567890",
+      "valid": true,
+      "validationErrors": [],
+      "url": "https://example.com/phone-lookup/441234567890"
+    },
+    "isBanned": false,
+    "accountEnabled": true,
+    "accountLocked": false,
+    "userIsVerified": true,
+    "doYouHaveChildren": false,
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "credentialsExpired": false,
+    "accountExpired": false,
+    "userLoggedIn": false,
+    "profileCreated": true,
+    "preferenceCreated": true,
+    "accountVerifiedBadge": false,
+    "_class": "dev.lyneapp.backendapplication.common.model.User"
+  },
+  {
+    "_id": {
+      "$oid": "649646bfa6b1477596923d26"
+    },
+    "userPhoneNumber": "+2349876543210",
+    "verificationCode": "216489",
+    "password": "$2a$10$Cayx4KHHY1T1oMAzUV1W0u04e1qM3qQWmMaRHF1sUf44brrWcV5mC",
+    "passwordHash": "$2a$10$Cayx4KHHY1T1oMAzUV1W0u04e1qM3qQWmMaRHF1sUf44brrWcV5mC",
+    "emailAddress": "bisi.adeyemi@example.com",
+    "firstName": "Bisi",
+    "lastName": "Adeyemi",
+    "height": "168",
+    "religion": "Muslim",
+    "job": "Doctor",
+    "industry": "Healthcare",
+    "highestDegree": "Medical Degree",
+    "institutionName": "University of Lagos",
+    "aboutYou": "I am a passionate doctor dedicated to providing healthcare services to those in need. I enjoy staying active, exploring new places, and learning about different cultures.",
+    "role": "user",
+    "gender": "Female",
+    "age": "32",
+    "score": {
+      "$numberDouble": "0.0"
+    },
+    "tribe": [
+      "Yoruba"
+    ],
+    "languages": [
+      "English",
+      "Yoruba"
+    ],
+    "interests": [
+      "Health and Wellness",
+      "Traveling",
+      "Culinary"
+    ],
+    "mediaFileURLs": [
+      "https://example.com/profile-image/bisi-adeyemi/profile.jpg",
+      "https://example.com/profile-image/bisi-adeyemi/cover.jpg"
+    ],
+    "prompts": [
+      {
+        "promptID": {
+          "$numberInt": "9"
+        },
+        "promptQuestion": "What is your favorite cuisine?",
+        "promptResponse": "I love Nigerian cuisine, especially traditional Yoruba dishes."
+      },
+      {
+        "promptID": {
+          "$numberInt": "12"
+        },
+        "promptQuestion": "What is your favorite hobby?",
+        "promptResponse": "My favorite hobby is practicing yoga and meditation."
+      }
+    ],
+    "blockedUsers": [],
+    "dateOfBirth": {
+      "$date": {
+        "$numberLong": "757382400000"
+      }
+    },
+    "currentLocation": {
+      "latitude": {
+        "$numberDouble": "6.5244"
+      },
+      "longitude": {
+        "$numberDouble": "3.3792"
+      },
+      "city": "Lagos",
+      "country": "Nigeria"
+    },
+    "placeOfBirthLocation": {
+      "latitude": {
+        "$numberDouble": "7.3775"
+      },
+      "longitude": {
+        "$numberDouble": "3.9470"
+      },
+      "city": "Ibadan",
+      "country": "Nigeria"
+    },
+    "passwordCreatedDate": {
+      "$date": {
+        "$numberLong": "1687570196843"
+      }
+    },
+    "preferences": {
+      "preferredGender": {
+        "preferredGender": "male",
+        "both": false
+      },
+      "preferredTribes": {
+        "preferredTribes": [
+          "Yoruba",
+          "Akan"
+        ],
+        "openToAll": false
+      },
+      "preferredAgeRange": {
+        "minimumAge": {
+          "$numberInt": "30"
+        },
+        "maximumAge": {
+          "$numberInt": "40"
+        },
+        "openToAll": false
+      },
+      "preferredHeightRange": {
+        "minimumHeight": {
+          "$numberInt": "165"
+        },
+        "maximumHeight": {
+          "$numberInt": "180"
+        },
+        "openToAll": false
+      },
+      "preferredReligion": {
+        "preferredReligion": "Muslim",
+        "openToAll": false,
+        "denomination": null
+      },
+      "doYouWantSomeoneWithChildren": {
+        "shouldTheyHaveChildren": false,
+        "openToAll": false
+      },
+      "preferredQualification": {
+        "highestDegree": "Any",
+        "institutionName": "Any reputable university"
+      },
+      "preferredInterests": [
+        "Health and Wellness",
+        "Traveling",
+        "Technology"
+      ],
+      "preferredLanguages": [
+        "English",
+        "Yoruba",
+        "French"
+      ],
+      "preferredLocations": [
+        {
+          "latitude": {
+            "$numberDouble": "6.5244"
+          },
+          "longitude": {
+            "$numberDouble": "3.3792"
+          },
+          "city": "Lagos",
+          "country": "Nigeria"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "40.7128"
+          },
+          "longitude": {
+            "$numberDouble": "-74.0060"
+          },
+          "city": "New York",
+          "country": "USA"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "48.8566"
+          },
+          "longitude": {
+            "$numberDouble": "2.3522"
+          },
+          "city": "Paris",
+          "country": "France"
+        }
+      ],
+      "preferenceCreatedAt": {
+        "$date": {
+          "$numberLong": "1687570200082"
+        }
+      },
+      "isAMatch": false,
+      "isBlocked": false,
+      "shouldTheyDrink": true,
+      "shouldTheySmoke": false,
+      "shouldTheyHaveChildren": false,
+      "interactedWithUser": false,
+      "hasAccountVerified": false,
+      "preferenceCreated": true
+    },
+    "phoneNumberLookUpData": {
+      "callingCountryCode": "234",
+      "countryCode": "NG",
+      "nationalFormat": "09876543210",
+      "valid": true,
+      "validationErrors": [],
+      "url": "https://example.com/phone-lookup/2349876543210"
+    },
+    "isBanned": false,
+    "accountEnabled": true,
+    "accountLocked": false,
+    "userIsVerified": true,
+    "doYouHaveChildren": false,
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "credentialsExpired": false,
+    "accountExpired": false,
+    "userLoggedIn": false,
+    "profileCreated": true,
+    "preferenceCreated": true,
+    "accountVerifiedBadge": false,
+    "_class": "dev.lyneapp.backendapplication.common.model.User"
+  },
+  {
+    "_id": {
+      "$oid": "649646bfa6b1477596923d27"
+    },
+    "userPhoneNumber": "+12045551234",
+    "verificationCode": "951872",
+    "password": "$2a$10$ekF9NkwDp.U3tIkDQHw7y.AY8K/C62r55w0gDH/luJ9DzI39xSY7G",
+    "passwordHash": "$2a$10$ekF9NkwDp.U3tIkDQHw7y.AY8K/C62r55w0gDH/luJ9DzI39xSY7G",
+    "emailAddress": "jenny.smith@example.com",
+    "firstName": "Jenny",
+    "lastName": "Smith",
+    "height": "165",
+    "religion": "None",
+    "job": "Student",
+    "industry": "Education",
+    "highestDegree": "High School",
+    "institutionName": "Winnipeg High School",
+    "aboutYou": "I'm a passionate student with a love for learning. I enjoy exploring various subjects and engaging in extracurricular activities like music and sports.",
+    "role": "user",
+    "gender": "Female",
+    "age": "18",
+    "score": {
+      "$numberDouble": "0.0"
+    },
+    "tribe": [],
+    "languages": [
+      "English"
+    ],
+    "interests": [
+      "Music",
+      "Sports",
+      "Reading"
+    ],
+    "mediaFileURLs": [
+      "https://example.com/profile-image/jenny-smith/profile.jpg",
+      "https://example.com/profile-image/jenny-smith/cover.jpg"
+    ],
+    "prompts": [
+      {
+        "promptID": {
+          "$numberInt": "9"
+        },
+        "promptQuestion": "What is your favorite cuisine?",
+        "promptResponse": "I enjoy trying different cuisines, but Italian food is my favorite."
+      },
+      {
+        "promptID": {
+          "$numberInt": "12"
+        },
+        "promptQuestion": "What is your favorite hobby?",
+        "promptResponse": "My favorite hobby is playing the piano and composing music."
+      }
+    ],
+    "blockedUsers": [],
+    "dateOfBirth": {
+      "$date": {
+        "$numberLong": "760569600000"
+      }
+    },
+    "currentLocation": {
+      "latitude": {
+        "$numberDouble": "49.8951"
+      },
+      "longitude": {
+        "$numberDouble": "-97.1384"
+      },
+      "city": "Winnipeg",
+      "country": "Canada"
+    },
+    "placeOfBirthLocation": {
+      "latitude": {
+        "$numberDouble": "49.2827"
+      },
+      "longitude": {
+        "$numberDouble": "-123.1207"
+      },
+      "city": "Vancouver",
+      "country": "Canada"
+    },
+    "passwordCreatedDate": {
+      "$date": {
+        "$numberLong": "1687570196843"
+      }
+    },
+    "preferences": {
+      "preferredGender": {
+        "preferredGender": "male",
+        "both": false
+      },
+      "preferredTribes": {
+        "preferredTribes": [],
+        "openToAll": true
+      },
+      "preferredAgeRange": {
+        "minimumAge": {
+          "$numberInt": "18"
+        },
+        "maximumAge": {
+          "$numberInt": "25"
+        },
+        "openToAll": false
+      },
+      "preferredHeightRange": {
+        "minimumHeight": {
+          "$numberInt": "160"
+        },
+        "maximumHeight": {
+          "$numberInt": "180"
+        },
+        "openToAll": false
+      },
+      "preferredReligion": {
+        "preferredReligion": "None",
+        "openToAll": true,
+        "denomination": null
+      },
+      "doYouWantSomeoneWithChildren": {
+        "shouldTheyHaveChildren": false,
+        "openToAll": true
+      },
+      "preferredQualification": {
+        "highestDegree": "Any",
+        "institutionName": "Any reputable university"
+      },
+      "preferredInterests": [
+        "Music",
+        "Sports",
+        "Reading"
+      ],
+      "preferredLanguages": [
+        "English",
+        "French",
+        "Spanish"
+      ],
+      "preferredLocations": [
+        {
+          "latitude": {
+            "$numberDouble": "49.8951"
+          },
+          "longitude": {
+            "$numberDouble": "-97.1384"
+          },
+          "city": "Winnipeg",
+          "country": "Canada"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "51.5074"
+          },
+          "longitude": {
+            "$numberDouble": "-0.1278"
+          },
+          "city": "London",
+          "country": "UK"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "40.7128"
+          },
+          "longitude": {
+            "$numberDouble": "-74.0060"
+          },
+          "city": "New York",
+          "country": "USA"
+        }
+      ],
+      "preferenceCreatedAt": {
+        "$date": {
+          "$numberLong": "1687570200082"
+        }
+      },
+      "isAMatch": false,
+      "isBlocked": false,
+      "shouldTheyDrink": true,
+      "shouldTheySmoke": false,
+      "shouldTheyHaveChildren": false,
+      "interactedWithUser": false,
+      "hasAccountVerified": false,
+      "preferenceCreated": true
+    },
+    "phoneNumberLookUpData": {
+      "callingCountryCode": "1",
+      "countryCode": "CA",
+      "nationalFormat": "2045551234",
+      "valid": true,
+      "validationErrors": [],
+      "url": "https://example.com/phone-lookup/12045551234"
+    },
+    "isBanned": false,
+    "accountEnabled": true,
+    "accountLocked": false,
+    "userIsVerified": true,
+    "doYouHaveChildren": false,
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "credentialsExpired": false,
+    "accountExpired": false,
+    "userLoggedIn": false,
+    "profileCreated": true,
+    "preferenceCreated": true,
+    "accountVerifiedBadge": false,
+    "_class": "dev.lyneapp.backendapplication.common.model.User"
+  },
+  {
+    "_id": {
+      "$oid": "649646bfa6b1477596923d28"
+    },
+    "userPhoneNumber": "+14165559876",
+    "verificationCode": "762914",
+    "password": "$2a$10$D0EJcXlWg1sUHt.0Pmvr0eXjme4z9Vp40gB.Yqv0LMYdq9D1rnoOW",
+    "passwordHash": "$2a$10$D0EJcXlWg1sUHt.0Pmvr0eXjme4z9Vp40gB.Yqv0LMYdq9D1rnoOW",
+    "emailAddress": "alexandra.brown@example.com",
+    "firstName": "Alexandra",
+    "lastName": "Brown",
+    "height": "172",
+    "religion": "Christian",
+    "job": "Marketing Coordinator",
+    "industry": "Marketing",
+    "highestDegree": "Bachelor's Degree",
+    "institutionName": "University of Manitoba",
+    "aboutYou": "I'm a creative and ambitious individual working as a marketing coordinator. In my free time, I enjoy painting, photography, and exploring new coffee shops in Winnipeg.",
+    "role": "user",
+    "gender": "Female",
+    "age": "26",
+    "score": {
+      "$numberDouble": "0.0"
+    },
+    "tribe": [],
+    "languages": [
+      "English"
+    ],
+    "interests": [
+      "Art",
+      "Photography",
+      "Coffee"
+    ],
+    "mediaFileURLs": [
+      "https://example.com/profile-image/alexandra-brown/profile.jpg",
+      "https://example.com/profile-image/alexandra-brown/cover.jpg"
+    ],
+    "prompts": [
+      {
+        "promptID": {
+          "$numberInt": "9"
+        },
+        "promptQuestion": "What is your favorite cuisine?",
+        "promptResponse": "I love trying different cuisines, but Japanese food is my favorite."
+      },
+      {
+        "promptID": {
+          "$numberInt": "12"
+        },
+        "promptQuestion": "What is your favorite hobby?",
+        "promptResponse": "My favorite hobby is playing the guitar and writing songs."
+      }
+    ],
+    "blockedUsers": [],
+    "dateOfBirth": {
+      "$date": {
+        "$numberLong": "715209600000"
+      }
+    },
+    "currentLocation": {
+      "latitude": {
+        "$numberDouble": "49.8951"
+      },
+      "longitude": {
+        "$numberDouble": "-97.1384"
+      },
+      "city": "Winnipeg",
+      "country": "Canada"
+    },
+    "placeOfBirthLocation": {
+      "latitude": {
+        "$numberDouble": "53.5461"
+      },
+      "longitude": {
+        "$numberDouble": "-113.4938"
+      },
+      "city": "Edmonton",
+      "country": "Canada"
+    },
+    "passwordCreatedDate": {
+      "$date": {
+        "$numberLong": "1687570196843"
+      }
+    },
+    "preferences": {
+      "preferredGender": {
+        "preferredGender": "male",
+        "both": false
+      },
+      "preferredTribes": {
+        "preferredTribes": [],
+        "openToAll": true
+      },
+      "preferredAgeRange": {
+        "minimumAge": {
+          "$numberInt": "25"
+        },
+        "maximumAge": {
+          "$numberInt": "35"
+        },
+        "openToAll": false
+      },
+      "preferredHeightRange": {
+        "minimumHeight": {
+          "$numberInt": "170"
+        },
+        "maximumHeight": {
+          "$numberInt": "190"
+        },
+        "openToAll": false
+      },
+      "preferredReligion": {
+        "preferredReligion": "Any",
+        "openToAll": true,
+        "denomination": null
+      },
+      "doYouWantSomeoneWithChildren": {
+        "shouldTheyHaveChildren": false,
+        "openToAll": true
+      },
+      "preferredQualification": {
+        "highestDegree": "Any",
+        "institutionName": "Any"
+      },
+      "preferredInterests": [
+        "Art",
+        "Photography",
+        "Coffee"
+      ],
+      "preferredLanguages": [
+        "English",
+        "Spanish",
+        "German"
+      ],
+      "preferredLocations": [
+        {
+          "latitude": {
+            "$numberDouble": "49.8951"
+          },
+          "longitude": {
+            "$numberDouble": "-97.1384"
+          },
+          "city": "Winnipeg",
+          "country": "Canada"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "34.0522"
+          },
+          "longitude": {
+            "$numberDouble": "-118.2437"
+          },
+          "city": "Los Angeles",
+          "country": "USA"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "51.5074"
+          },
+          "longitude": {
+            "$numberDouble": "-0.1278"
+          },
+          "city": "London",
+          "country": "UK"
+        }
+      ],
+      "preferenceCreatedAt": {
+        "$date": {
+          "$numberLong": "1687570200082"
+        }
+      },
+      "isAMatch": false,
+      "isBlocked": false,
+      "shouldTheyDrink": true,
+      "shouldTheySmoke": false,
+      "shouldTheyHaveChildren": false,
+      "interactedWithUser": false,
+      "hasAccountVerified": false,
+      "preferenceCreated": true
+    },
+    "phoneNumberLookUpData": {
+      "callingCountryCode": "1",
+      "countryCode": "CA",
+      "nationalFormat": "4165559876",
+      "valid": true,
+      "validationErrors": [],
+      "url": "https://example.com/phone-lookup/14165559876"
+    },
+    "isBanned": false,
+    "accountEnabled": true,
+    "accountLocked": false,
+    "userIsVerified": true,
+    "doYouHaveChildren": false,
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "credentialsExpired": false,
+    "accountExpired": false,
+    "userLoggedIn": false,
+    "profileCreated": true,
+    "preferenceCreated": true,
+    "accountVerifiedBadge": false,
+    "_class": "dev.lyneapp.backendapplication.common.model.User"
+  },
+  {
+    "_id": {
+      "$oid": "649646bfa6b1477596923d29"
+    },
+    "userPhoneNumber": "+2348012345678",
+    "verificationCode": "548712",
+    "password": "$2a$10$bnZUh9lmXT0LeO28SEJZguTOSYvzwpMnD.GxWIXsgzhhJxqMNJ8qi",
+    "passwordHash": "$2a$10$bnZUh9lmXT0LeO28SEJZguTOSYvzwpMnD.GxWIXsgzhhJxqMNJ8qi",
+    "emailAddress": "chidinma.okonkwo@example.com",
+    "firstName": "Chidinma",
+    "lastName": "Okonkwo",
+    "height": "160",
+    "religion": "Christian",
+    "job": "Student",
+    "industry": "Education",
+    "highestDegree": "Bachelor's Degree",
+    "institutionName": "University of Lagos",
+    "aboutYou": "I'm a dedicated and passionate student pursuing my Bachelor's Degree in Education. I have a strong interest in literature and enjoy writing poetry in my free time. I also love exploring Nigerian culture and traditions.",
+    "role": "user",
+    "gender": "Female",
+    "age": "22",
+    "score": {
+      "$numberDouble": "0.0"
+    },
+    "tribe": [],
+    "languages": [
+      "English",
+      "Igbo"
+    ],
+    "interests": [
+      "Literature",
+      "Poetry",
+      "Nigerian Culture"
+    ],
+    "mediaFileURLs": [
+      "https://example.com/profile-image/chidinma-okonkwo/profile.jpg",
+      "https://example.com/profile-image/chidinma-okonkwo/cover.jpg"
+    ],
+    "prompts": [
+      {
+        "promptID": {
+          "$numberInt": "9"
+        },
+        "promptQuestion": "What is your favorite cuisine?",
+        "promptResponse": "I absolutely love Nigerian cuisine, especially dishes like jollof rice and suya."
+      },
+      {
+        "promptID": {
+          "$numberInt": "12"
+        },
+        "promptQuestion": "What is your favorite hobby?",
+        "promptResponse": "My favorite hobby is writing poetry and expressing my emotions through words."
+      }
+    ],
+    "blockedUsers": [],
+    "dateOfBirth": {
+      "$date": {
+        "$numberLong": "757206400000"
+      }
+    },
+    "currentLocation": {
+      "latitude": {
+        "$numberDouble": "6.5244"
+      },
+      "longitude": {
+        "$numberDouble": "3.3792"
+      },
+      "city": "Lagos",
+      "country": "Nigeria"
+    },
+    "placeOfBirthLocation": {
+      "latitude": {
+        "$numberDouble": "6.5244"
+      },
+      "longitude": {
+        "$numberDouble": "3.3792"
+      },
+      "city": "Lagos",
+      "country": "Nigeria"
+    },
+    "passwordCreatedDate": {
+      "$date": {
+        "$numberLong": "1687570196843"
+      }
+    },
+    "preferences": {
+      "preferredGender": {
+        "preferredGender": "male",
+        "both": false
+      },
+      "preferredTribes": {
+        "preferredTribes": [],
+        "openToAll": true
+      },
+      "preferredAgeRange": {
+        "minimumAge": {
+          "$numberInt": "20"
+        },
+        "maximumAge": {
+          "$numberInt": "30"
+        },
+        "openToAll": false
+      },
+      "preferredHeightRange": {
+        "minimumHeight": {
+          "$numberInt": "155"
+        },
+        "maximumHeight": {
+          "$numberInt": "175"
+        },
+        "openToAll": false
+      },
+      "preferredReligion": {
+        "preferredReligion": "Christian",
+        "openToAll": false,
+        "denomination": null
+      },
+      "doYouWantSomeoneWithChildren": {
+        "shouldTheyHaveChildren": false,
+        "openToAll": true
+      },
+      "preferredQualification": {
+        "highestDegree": "Any",
+        "institutionName": "Any"
+      },
+      "preferredInterests": [
+        "Literature",
+        "Poetry",
+        "Nigerian Culture"
+      ],
+      "preferredLanguages": [
+        "English",
+        "Igbo"
+      ],
+      "preferredLocations": [
+        {
+          "latitude": {
+            "$numberDouble": "6.5244"
+          },
+          "longitude": {
+            "$numberDouble": "3.3792"
+          },
+          "city": "Lagos",
+          "country": "Nigeria"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "51.5074"
+          },
+          "longitude": {
+            "$numberDouble": "-0.1278"
+          },
+          "city": "London",
+          "country": "UK"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "40.7128"
+          },
+          "longitude": {
+            "$numberDouble": "-74.0060"
+          },
+          "city": "New York",
+          "country": "USA"
+        }
+      ],
+      "preferenceCreatedAt": {
+        "$date": {
+          "$numberLong": "1687570200082"
+        }
+      },
+      "isAMatch": false,
+      "isBlocked": false,
+      "shouldTheyDrink": true,
+      "shouldTheySmoke": false,
+      "shouldTheyHaveChildren": false,
+      "interactedWithUser": false,
+      "hasAccountVerified": false,
+      "preferenceCreated": true
+    },
+    "phoneNumberLookUpData": {
+      "callingCountryCode": "234",
+      "countryCode": "NG",
+      "nationalFormat": "08012345678",
+      "valid": true,
+      "validationErrors": [],
+      "url": "https://example.com/phone-lookup/2348012345678"
+    },
+    "isBanned": false,
+    "accountEnabled": true,
+    "accountLocked": false,
+    "userIsVerified": true,
+    "doYouHaveChildren": false,
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "credentialsExpired": false,
+    "accountExpired": false,
+    "userLoggedIn": false,
+    "profileCreated": true,
+    "preferenceCreated": true,
+    "accountVerifiedBadge": false,
+    "_class": "dev.lyneapp.backendapplication.common.model.User"
+  },
+  {
+    "_id": {
+      "$oid": "649646bfa6b1477596923d30"
+    },
+    "userPhoneNumber": "+2348098765432",
+    "verificationCode": "987654",
+    "password": "$2a$10$bnZUh9lmXT0LeO28SEJZguTOSYvzwpMnD.GxWIXsgzhhJxqMNJ8qi",
+    "passwordHash": "$2a$10$bnZUh9lmXT0LeO28SEJZguTOSYvzwpMnD.GxWIXsgzhhJxqMNJ8qi",
+    "emailAddress": "oluwatobi.adeyemi@example.com",
+    "firstName": "Oluwatobi",
+    "lastName": "Adeyemi",
+    "height": "180",
+    "religion": "Christian",
+    "job": "Engineer",
+    "industry": "Technology",
+    "highestDegree": "Master's Degree",
+    "institutionName": "University of Calgary",
+    "aboutYou": "I'm an ambitious and driven engineer currently working in the technology sector. I have a passion for innovation and enjoy solving complex problems. In my free time, I love playing soccer and exploring the beautiful landscapes of Calgary.",
+    "role": "user",
+    "gender": "Male",
+    "age": "30",
+    "score": {
+      "$numberDouble": "0.0"
+    },
+    "tribe": [],
+    "languages": [
+      "English",
+      "Yoruba"
+    ],
+    "interests": [
+      "Technology",
+      "Soccer",
+      "Nature",
+      "Travel"
+    ],
+    "mediaFileURLs": [
+      "https://example.com/profile-image/oluwatobi-adeyemi/profile.jpg",
+      "https://example.com/profile-image/oluwatobi-adeyemi/cover.jpg"
+    ],
+    "prompts": [
+      {
+        "promptID": {
+          "$numberInt": "5"
+        },
+        "promptQuestion": "What is your favorite technology gadget?",
+        "promptResponse": "My favorite technology gadget is my smartphone. It keeps me connected and allows me to access information and resources on the go."
+      },
+      {
+        "promptID": {
+          "$numberInt": "8"
+        },
+        "promptQuestion": "What is your dream travel destination?",
+        "promptResponse": "My dream travel destination is the Maldives. I would love to experience the beautiful beaches and turquoise waters."
+      }
+    ],
+    "blockedUsers": [],
+    "dateOfBirth": {
+      "$date": {
+        "$numberLong": "686678400000"
+      }
+    },
+    "currentLocation": {
+      "latitude": {
+        "$numberDouble": "51.0447"
+      },
+      "longitude": {
+        "$numberDouble": "-114.0719"
+      },
+      "city": "Calgary",
+      "country": "Canada"
+    },
+    "placeOfBirthLocation": {
+      "latitude": {
+        "$numberDouble": "6.5244"
+      },
+      "longitude": {
+        "$numberDouble": "3.3792"
+      },
+      "city": "Lagos",
+      "country": "Nigeria"
+    },
+    "passwordCreatedDate": {
+      "$date": {
+        "$numberLong": "1687570196843"
+      }
+    },
+    "preferences": {
+      "preferredGender": {
+        "preferredGender": "female",
+        "both": false
+      },
+      "preferredTribes": {
+        "preferredTribes": [],
+        "openToAll": true
+      },
+      "preferredAgeRange": {
+        "minimumAge": {
+          "$numberInt": "25"
+        },
+        "maximumAge": {
+          "$numberInt": "35"
+        },
+        "openToAll": false
+      },
+      "preferredHeightRange": {
+        "minimumHeight": {
+          "$numberInt": "170"
+        },
+        "maximumHeight": {
+          "$numberInt": "190"
+        },
+        "openToAll": false
+      },
+      "preferredReligion": {
+        "preferredReligion": "Christian",
+        "openToAll": false,
+        "denomination": null
+      },
+      "doYouWantSomeoneWithChildren": {
+        "shouldTheyHaveChildren": false,
+        "openToAll": true
+      },
+      "preferredQualification": {
+        "highestDegree": "Any",
+        "institutionName": "Any"
+      },
+      "preferredInterests": [
+        "Technology",
+        "Soccer",
+        "Nature",
+        "Travel"
+      ],
+      "preferredLanguages": [
+        "English",
+        "Yoruba"
+      ],
+      "preferredLocations": [
+        {
+          "latitude": {
+            "$numberDouble": "51.0447"
+          },
+          "longitude": {
+            "$numberDouble": "-114.0719"
+          },
+          "city": "Calgary",
+          "country": "Canada"
+        },
+        {
+          "latitude": {
+            "$numberDouble": "6.5244"
+          },
+          "longitude": {
+            "$numberDouble": "3.3792"
+          },
+          "city": "Lagos",
+          "country": "Nigeria"
+        }
+      ],
+      "preferenceCreatedAt": {
+        "$date": {
+          "$numberLong": "1687570200082"
+        }
+      },
+      "isAMatch": false,
+      "isBlocked": false,
+      "shouldTheyDrink": true,
+      "shouldTheySmoke": false,
+      "shouldTheyHaveChildren": false,
+      "interactedWithUser": false,
+      "hasAccountVerified": false,
+      "preferenceCreated": true
+    },
+    "phoneNumberLookUpData": {
+      "callingCountryCode": "234",
+      "countryCode": "NG",
+      "nationalFormat": "08098765432",
+      "valid": true,
+      "validationErrors": [],
+      "url": "https://example.com/phone-lookup/2348098765432"
+    },
+    "isBanned": false,
+    "accountEnabled": true,
+    "accountLocked": false,
+    "userIsVerified": true,
+    "doYouHaveChildren": false,
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "credentialsExpired": false,
+    "accountExpired": false,
+    "userLoggedIn": false,
+    "profileCreated": true,
+    "preferenceCreated": true,
+    "accountVerifiedBadge": false,
+    "_class": "dev.lyneapp.backendapplication.common.model.User"
+  }
+]

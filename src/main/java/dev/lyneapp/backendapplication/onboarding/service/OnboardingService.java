@@ -8,6 +8,7 @@ import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import dev.lyneapp.backendapplication.common.model.UserPreference;
 import dev.lyneapp.backendapplication.common.model.User;
+import dev.lyneapp.backendapplication.common.repository.UserPreferenceRepository;
 import dev.lyneapp.backendapplication.common.util.exception.*;
 import dev.lyneapp.backendapplication.onboarding.model.*;
 import dev.lyneapp.backendapplication.onboarding.model.enums.TokenType;
@@ -29,8 +30,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static dev.lyneapp.backendapplication.common.util.Validation.*;
 import static dev.lyneapp.backendapplication.common.util.exception.ExceptionMessages.*;
@@ -49,6 +55,8 @@ import static dev.lyneapp.backendapplication.common.util.exception.ExceptionMess
 public class OnboardingService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(OnboardingService.class);
+    private static final int CONFIRMATION_CODE_SIZE = 8;
+    private static final int HALF_CONFIRMATION_CODE_SIZE = 4;
     private static final String CONFIRMED = "confirmed";
     private static final String CONFIRMATION_MESSAGE = "Please check your email to confirm your account";
     private static final String VERIFICATION_MESSAGE = "Your LYNE verification code is: ";
@@ -57,6 +65,7 @@ public class OnboardingService {
     private final JwtTokenRepository jwtTokenRepository;
     private final AuthenticationManager authenticationManager;
     private final AmazonSimpleEmailService amazonSimpleEmailService;
+    private final UserPreferenceRepository userPreferenceRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -142,21 +151,23 @@ public class OnboardingService {
         userRepository.save(verifiedUser);
         ConfirmationToken confirmationToken = generateConfirmationToken(verifiedUser);
         confirmationTokenRepository.save(confirmationToken);
-        String confirmationLink = generateConfirmationLink(confirmationToken);
+        String confirmationCode = generateConfirmationCode(confirmationToken);
 
         sendConfirmEmailMessage(sendEmailRequest.getFromEmail(), sendEmailRequest.getToEmail(),
-                sendEmailRequest.getSubject(), sendEmailRequest.getBody(), verifiedUser.getUserPhoneNumber(), confirmationLink);
+                sendEmailRequest.getSubject(), sendEmailRequest.getBody(), verifiedUser.getUserPhoneNumber(), confirmationCode);
         LOGGER.info("Exiting OnboardingService.yourEmail");
         return CONFIRMATION_MESSAGE;
     }
 
-    public EmailResponse confirmEmailToken(String token) {
+    public EmailResponse confirmEmailToken(ConfirmEmailRequest confirmEmailRequest) {
         LOGGER.info("Entering OnboardingService.confirmEmailToken");
-        ConfirmationToken confirmationToken = findConfirmationTokenByToken(token);
+        ConfirmationToken confirmationToken = findConfirmationTokenByToken(confirmEmailRequest.getConfirmationToken());
         validateConfirmationToken(confirmationToken);
         confirmationToken.setEmailEnabled(true);
         confirmationToken.setConfirmedAt(LocalDateTime.now());
+        confirmationToken.setToken(null);
         confirmationTokenRepository.save(confirmationToken);
+//        confirmationTokenRepository.delete(confirmationToken);
 
         LOGGER.info("Exiting OnboardingService.confirmEmailToken");
         return EmailResponse
@@ -172,6 +183,7 @@ public class OnboardingService {
                 .build();
     }
 
+
     public ProfileResponse yourProfile(ProfileRequest yourProfileRequest) {
         LOGGER.info("Entering OnboardingService.yourProfile");
         User verifiedUser = verifyUserByPhoneNumber(yourProfileRequest.getUserPhoneNumber());
@@ -179,13 +191,14 @@ public class OnboardingService {
         if (!verifiedUser.isUserIsVerified()) {
             throw new UnverifiedUserException(USER_UNVERIFIED);
         }
+
         verifiedUser.setFirstName(yourProfileRequest.getName().getFirstName());
         verifiedUser.setLastName(yourProfileRequest.getName().getLastName());
         verifiedUser.setDateOfBirth(yourProfileRequest.getDateOfBirth());
         verifiedUser.setCurrentLocation(yourProfileRequest.getCurrentLocation());
         verifiedUser.setPlaceOfBirthLocation(yourProfileRequest.getPlaceOfBirthLocation());
         verifiedUser.setRole(yourProfileRequest.getRole());
-        verifiedUser.setGender(yourProfileRequest.getGender());
+        verifiedUser.setGender(yourProfileRequest.getGender().toLowerCase());
         verifiedUser.setHeight(yourProfileRequest.getHeight());
         verifiedUser.setTribe(yourProfileRequest.getTribe());
         verifiedUser.setDoYouDrink(yourProfileRequest.isDoYouDrink());
@@ -202,7 +215,15 @@ public class OnboardingService {
         verifiedUser.setPrompts(yourProfileRequest.getPrompts());
         verifiedUser.setProfileCreated(true);
 
+        // FIXME: How do you update Age on an ongoing basis?
+        // FIXME: When the user opens the app, the age should be updated
+        // FIXME: What endpoint should be used to update the age?
+        Period period = Period.between(yourProfileRequest.getDateOfBirth(), LocalDate.now());
+        int years = period.getYears();
+        verifiedUser.setAge(String.valueOf(years));
+
         userRepository.save(verifiedUser);
+        LOGGER.info("User age is {}: ", verifiedUser.getAge());
         LOGGER.info("Exiting OnboardingService.yourProfile");
         return ProfileResponse
                 .builder()
@@ -239,6 +260,7 @@ public class OnboardingService {
         LOGGER.info("Entering OnboardingService.yourPreference");
         User verifiedUser = verifyUserByPhoneNumber(preferenceRequest.getUserPhoneNumber());
         UserPreference preference = UserPreference.builder()
+                .userPhoneNumber(preferenceRequest.getUserPhoneNumber())
                 .preferredGender(preferenceRequest.getPreferredGender())
                 .preferredTribes(preferenceRequest.getPreferredTribes())
                 .preferredAgeRange(preferenceRequest.getPreferredAgeRange())
@@ -257,6 +279,7 @@ public class OnboardingService {
 
         verifiedUser.setPreferences(preference);
         verifiedUser.setPreferenceCreated(preference.isPreferenceCreated());
+        userPreferenceRepository.save(preference);
         userRepository.save(verifiedUser);
         LOGGER.info("Exiting OnboardingService.yourPreference");
         return PreferenceResponse
@@ -340,16 +363,33 @@ public class OnboardingService {
 
     private ConfirmationToken generateConfirmationToken(User user) {
         LOGGER.info("Entering OnboardingService.generateConfirmationToken");
-        String token = UUID.randomUUID().toString();
+//        String token = UUID.randomUUID().toString();
+        String token = generateRandomCode();
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(15);
         LOGGER.info("Exiting OnboardingService.generateConfirmationToken");
         return new ConfirmationToken(token, now, expirationTime, user);
     }
 
-    private String generateConfirmationLink(ConfirmationToken confirmationToken) {
-        LOGGER.info("Entering and exiting Onboarding.generateConfirmationLink");
-        return serverHostUrl + "/api/v1/auth/confirmEmail?token=" + confirmationToken.getToken();
+    private String generateRandomCode() {
+        Random random = new Random();
+
+        return IntStream.range(0, CONFIRMATION_CODE_SIZE)
+                .mapToObj(i -> {
+                    if (i < HALF_CONFIRMATION_CODE_SIZE) {
+                        int letter = random.nextInt(26) + 'A'; // ASCII value of 'A' is 65
+                        return String.valueOf((char) letter);
+                    } else {
+                        int digit = random.nextInt(10) + '0'; // ASCII value of '0' is 48
+                        return String.valueOf((char) digit);
+                    }
+                })
+                .collect(Collectors.joining());
+    }
+
+    private String generateConfirmationCode(ConfirmationToken confirmationToken) {
+        LOGGER.info("Entering and exiting Onboarding.generateConfirmationCode");
+        return confirmationToken.getToken();
     }
 
     private ConfirmationToken findConfirmationTokenByToken(String token) {
@@ -411,7 +451,7 @@ public class OnboardingService {
         LOGGER.info("Exiting OnboardingService.loginValidations");
     }
 
-    private void sendConfirmEmailMessage(String fromEmail, String toEmail, String subject, String body, String userPhoneNumber, String confirmationLink) {
+    private void sendConfirmEmailMessage(String fromEmail, String toEmail, String subject, String body, String userPhoneNumber, String confirmationCode) {
         LOGGER.info("Entering OnboardingService.sendConfirmEmailMessage");
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(fromEmail);
@@ -423,8 +463,8 @@ public class OnboardingService {
 
         SendTemplatedEmailRequest sendTemplatedEmailRequest = new SendTemplatedEmailRequest();
         sendTemplatedEmailRequest.withDestination(destination);
-        sendTemplatedEmailRequest.withTemplate("EmailVerificationTemplate");
-        sendTemplatedEmailRequest.withTemplateData("{ \"name\":\"" + userPhoneNumber + "\", \"verificationLink\": \"" + confirmationLink + "\"}");
+        sendTemplatedEmailRequest.withTemplate("UserEmailVerificationTemplate");
+        sendTemplatedEmailRequest.withTemplateData("{ \"name\":\"" + userPhoneNumber + "\", \"verificationCode\": \"" + confirmationCode + "\"}");
         sendTemplatedEmailRequest.withSource(simpleMailMessage.getFrom());
         amazonSimpleEmailService.sendTemplatedEmail(sendTemplatedEmailRequest);
         LOGGER.info("Exiting OnboardingService.sendConfirmEmailMessage");

@@ -26,29 +26,35 @@ public class ApplicationConfiguration {
     private final UserRepository userRepository;
     private final MongoTemplate mongoTemplate;
 
-    // FIXME - DO NOT INCLUDE IN PRODUCTION
-    @PostConstruct
-    public void dropUsersCollection() {
-        mongoTemplate.dropCollection("users");
-    }
-
-    // FIXME - DO NOT INCLUDE IN PRODUCTION
+//    // FIXME - DO NOT INCLUDE IN PRODUCTION
+//    @PostConstruct
+//    public void dropUsersCollection() {
+//        mongoTemplate.dropCollection("users");
+//    }
+//
+//    // FIXME - DO NOT INCLUDE IN PRODUCTION
+//    @PostConstruct
+//    public void dropPreferenceCollection() {
+//        mongoTemplate.dropCollection("preference");
+//    }
+//
+//    // FIXME - DO NOT INCLUDE IN PRODUCTION
     @PostConstruct
     public void dropEmailTokenCollection() {
         mongoTemplate.dropCollection("email_token");
     }
-
-    // FIXME - DO NOT INCLUDE IN PRODUCTION
+//
+//    // FIXME - DO NOT INCLUDE IN PRODUCTION
     @PostConstruct
     public void dropJwtTokenCollection() {
         mongoTemplate.dropCollection("jwt_token");
     }
-
-    // FIXME - DO NOT INCLUDE IN PRODUCTION
-    @PostConstruct
-    public void dropChatMessagesCollection() {
-        mongoTemplate.dropCollection("chatMessages");
-    }
+//
+//    // FIXME - DO NOT INCLUDE IN PRODUCTION
+//    @PostConstruct
+//    public void dropChatMessagesCollection() {
+//        mongoTemplate.dropCollection("chatMessages");
+//    }
 
     @Bean
     public UserDetailsService userDetailsService() {

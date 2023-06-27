@@ -19,9 +19,27 @@ public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByPasswordResetToken(String token);
     @NotNull
     Optional<User> findById(@NotNull String id);
-    List<User> findUsersByGenderAndTribeAndReligionAndDoYouHaveChildrenAndDoYouDrinkAndDoYouSmoke(
-            String gender,
-            List<String> tribe,
-            String religion,
-            boolean doYouHaveChildren, boolean doYouDrink, boolean doYouSmoke);
+    List<User> findUsersByGenderAndTribeAndReligionAndDoYouHaveChildrenAndDoYouDrinkAndDoYouSmoke (
+            String gender, List<String> tribe, String religion,
+            boolean doYouHaveChildren, boolean doYouDrink, boolean doYouSmoke );
+
+    List<User> findUsersByGenderAndDoYouHaveChildrenAndDoYouDrinkAndDoYouSmoke (String gender, boolean doYouHaveChildren, boolean doYouDrink, boolean doYouSmoke );
+
+    List<User> findUsersByGender (String gender );
+
+    /**
+     List<User> recommendations = userRepository.findUsersByGenderAndDoYouHaveChildrenAndDoYouDrinkAndDoYouSmoke(
+     userPreference.getPreferredGender().getPreferredGender(),
+     userPreference.isShouldTheyHaveChildren(),
+     userPreference.isShouldTheyDrink(),
+     userPreference.isShouldTheySmoke()
+     );
+     */
+
+    /**
+     List<User> recommendations = userRepository.findUsersByGender(
+     userPreference.getPreferredGender().getPreferredGender()
+     );
+     */
+
 }

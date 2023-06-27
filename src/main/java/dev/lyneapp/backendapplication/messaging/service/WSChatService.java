@@ -3,6 +3,8 @@ package dev.lyneapp.backendapplication.messaging.service;
 import dev.lyneapp.backendapplication.messaging.model.ChatMessage;
 import dev.lyneapp.backendapplication.messaging.repository.WSMessageRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class WSChatService {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(WSChatService.class);
+
     private final WSMessageRepository chatMessageRepository;
 
     private static final String MESSAGE_NOTIFICATION = "You have a new message";
@@ -27,6 +31,7 @@ public class WSChatService {
 
 
     public ChatMessage sendMessage(ChatMessage chatMessage) {
+        LOGGER.info("Entering WSChatService.sendMessage ,Sending message: {}", chatMessage);
         chatMessage.setTimestamp(System.currentTimeMillis());
         chatMessage.setSenderName("Uchenna"); // hard coded for now
         chatMessage.setRecipientName("Phoenixtype"); // hard coded for now
@@ -42,20 +47,25 @@ public class WSChatService {
          */
 
         chatMessageRepository.save(chatMessage);
+        LOGGER.info("Exiting WSChatService.sendMessage ,Sending message: {}", chatMessage);
         return chatMessage;
     }
 
     public List<ChatMessage> getChatMessages(String chatId) {
+        LOGGER.info("WSChatService.getChatMessages ,Getting messages for chatId: {}", chatId);
         return chatMessageRepository.findByChatId(chatId);
     }
 
     public ChatMessage addUser(ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+        LOGGER.info("Entering WSChatService.addUser ,Adding user: {}", chatMessage);
         Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("username", chatMessage.getSender());
         chatMessageRepository.save(chatMessage);
+        LOGGER.info("Exiting WSChatService.addUser ,Adding user: {}", chatMessage);
         return chatMessage;
     }
 
     public ChatMessage getLastMessage(String chatId) {
+        LOGGER.info("WSChatService.getLastMessage ,Getting last message for chatId: {}", chatId);
         return chatMessageRepository.findFirstByChatIdOrderByTimestampDesc(chatId);
     }
 

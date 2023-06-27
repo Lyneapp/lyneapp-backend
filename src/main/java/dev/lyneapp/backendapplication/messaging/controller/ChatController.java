@@ -2,8 +2,11 @@ package dev.lyneapp.backendapplication.messaging.controller;
 
 import dev.lyneapp.backendapplication.messaging.model.MessageDTO;
 import dev.lyneapp.backendapplication.messaging.service.ChatService;
+import dev.lyneapp.backendapplication.recommendation.controller.RecommendationController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,19 +35,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatController {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(ChatController.class);
+
     private final ChatService chatService;
 
     public static final String MESSAGE_SENT_SUCCESSFULLY = "Message sent successfully";
 
     @PostMapping(path = "send")
     public ResponseEntity<String> sendMessage(@Valid @RequestBody MessageDTO messageDTO) {
+        LOGGER.info("Sending message from user with id: {} to user with id: {}", messageDTO.getSenderId(), messageDTO.getReceiverId());
         chatService.sendMessage(messageDTO);
+        LOGGER.info("Sent message from user with id: {} to user with id: {}", messageDTO.getSenderId(), messageDTO.getReceiverId());
         return ResponseEntity.ok(MESSAGE_SENT_SUCCESSFULLY);
     }
 
     @GetMapping(path = "history")
     public ResponseEntity<List<MessageDTO>> getChatHistory(@Valid @RequestBody MessageDTO messageDTO) {
+        LOGGER.info("Getting chat history for user with id: {} and user with id: {}", messageDTO.getSenderId(), messageDTO.getReceiverId());
         List<MessageDTO> chatHistory = chatService.getChatHistory(messageDTO.getSenderId(), messageDTO.getReceiverId());
+        LOGGER.info("Got chat history for user with id: {} and user with id: {}", messageDTO.getSenderId(), messageDTO.getReceiverId());
         return ResponseEntity.ok(chatHistory);
     }
 }

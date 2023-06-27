@@ -32,9 +32,9 @@ import java.util.List;
 @AllArgsConstructor
 public class InteractionPool {
 
-    private List<String> allUsers; // a list of all users in the system
-    private List<String> recommendableUsers; // traverse through the database and put all recommendable users in this list
-    private List<String> recommendedUsers; // A list of users currently recommended
+    private List<String> allUsers; // a list of all users in the system (in the database)
+    private List<String> recommendableUsers; // traverse through the database and put all recommendable users in this list/cache
+    private List<String> recommendedUsers; // A list of users currently recommended, this list is populated by the recommendation algorithm, this list is used to filter out users that have already been recommended and re-recommended them if the proper conditions are met (recommended user is not blocked by user, recommended user was not reported by the user, time since last recommendation is greater than X days/hours/minutes/seconds etc.)
     private List<String> matchedRecommendedUsers; //user likes recommended user and recommended user likes user so a match needs to happen
     private List<String> recommendedUsersLikedByUser; //user likes recommended user //user does not like recommended user but recommended user likes user
     private List<String> recommendedUsersNotLikedByUser; //user does not like recommended user and no response yet from recommended user

@@ -19,9 +19,9 @@ public class BackendApplication {
 		SpringApplication.run(BackendApplication.class, args);
 	}
 
-	@GetMapping(path ="hello")
+	@GetMapping(path ="lyneapp")
     public ResponseEntity<String> sayHello() {
-		String hello = "Hello World!";
-		return ResponseEntity.status(200).body(hello);
+		String lyneApp = "Building LyneApp, one line of code at a time!";
+		return ResponseEntity.status(200).body(lyneApp);
 	}
 }
