@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +23,23 @@ public class WSChatController {
     private final static Logger LOGGER = LoggerFactory.getLogger(WSChatController.class);
 
     private final WSChatService wsChatService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/messaging/chat.sendMessage")
+
+    @MessageMapping("/messaging/chat.addUser")
+    @SendTo("/topic/public")
+    public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+        LOGGER.info("WSChatController.addUser ,Adding user: {}", chatMessage);
+        return wsChatService.addUser(chatMessage, headerAccessor);
+    }
+
+    @MessageMapping("/messaging/chat.directMessage")
+    public void sendToSpecificUser(@Payload ChatMessage chatMessage) {
+        LOGGER.info("WSChatController.sendToSpecificUser, Sending message: {}", chatMessage);
+        simpMessagingTemplate.convertAndSendToUser(chatMessage.getRecipientPhoneNumber(), "/specific", chatMessage);
+    }
+
+    @MessageMapping("/messaging/chat.sendBroadcastMessage")
     @SendTo("/topic/public")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
         LOGGER.info("WSChatController.sendMessage ,Sending message: {}", chatMessage);
@@ -34,13 +50,6 @@ public class WSChatController {
     public List<ChatMessage> getChatMessages(@RequestParam("chatId") String chatId) {
         LOGGER.info("WSChatController.getChatMessages ,Getting messages for chat: {}", chatId);
         return wsChatService.getChatMessages(chatId);
-    }
-
-    @MessageMapping("/messaging/chat.addUser")
-    @SendTo("/topic/public")
-    public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-        LOGGER.info("WSChatController.addUser ,Adding user: {}", chatMessage);
-        return wsChatService.addUser(chatMessage, headerAccessor);
     }
 
     @GetMapping("/messaging/chat.lastMessage")

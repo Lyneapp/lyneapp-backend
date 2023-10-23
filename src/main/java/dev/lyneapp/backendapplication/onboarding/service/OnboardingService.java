@@ -6,6 +6,7 @@ import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.SendTemplatedEmailRequest;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
+import dev.lyneapp.backendapplication.common.model.PhoneNumberDTO;
 import dev.lyneapp.backendapplication.common.model.UserPreference;
 import dev.lyneapp.backendapplication.common.model.User;
 import dev.lyneapp.backendapplication.common.repository.UserPreferenceRepository;
@@ -18,6 +19,7 @@ import dev.lyneapp.backendapplication.onboarding.repository.ConfirmationTokenRep
 import dev.lyneapp.backendapplication.onboarding.repository.JwtTokenRepository;
 import dev.lyneapp.backendapplication.common.repository.UserRepository;
 import dev.lyneapp.backendapplication.onboarding.model.request.ChangePhoneNumberRequest;
+import dev.lyneapp.backendapplication.settings.model.SettingsDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -84,7 +86,7 @@ public class OnboardingService {
 
 
 
-    public void phoneNumberSignUp(PhoneNumberRequest phoneNumberRequest) throws PhoneNumberAlreadyExistsException, InvalidPhoneNumberException {
+    public void phoneNumberSignUp(PhoneNumberDTO phoneNumberRequest) throws PhoneNumberAlreadyExistsException, InvalidPhoneNumberException {
         LOGGER.info("Entering OnboardingService.phoneNumberSignUp");
         LOGGER.info("phoneNumberSignUp() - phoneNumberRequest: {}", phoneNumberRequest);
         validatePhoneNumber(phoneNumberRequest.getUserPhoneNumber());
@@ -192,6 +194,10 @@ public class OnboardingService {
             throw new UnverifiedUserException(USER_UNVERIFIED);
         }
 
+//        ModelMapper modelMapper = new ModelMapper();
+//        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//        verifiedUser = modelMapper.map(yourProfileRequest, User.class);
+
         verifiedUser.setFirstName(yourProfileRequest.getName().getFirstName());
         verifiedUser.setLastName(yourProfileRequest.getName().getLastName());
         verifiedUser.setDateOfBirth(yourProfileRequest.getDateOfBirth());
@@ -215,12 +221,15 @@ public class OnboardingService {
         verifiedUser.setPrompts(yourProfileRequest.getPrompts());
         verifiedUser.setProfileCreated(true);
 
-        // FIXME: How do you update Age on an ongoing basis?
+        // FIXME: How do you update Age on an ongoing basis? - Use the spring scheduler @Scheduled/@EnableScheduling to capture all change in age in a 24hour period
         // FIXME: When the user opens the app, the age should be updated
         // FIXME: What endpoint should be used to update the age?
         Period period = Period.between(yourProfileRequest.getDateOfBirth(), LocalDate.now());
         int years = period.getYears();
         verifiedUser.setAge(String.valueOf(years));
+
+        SettingsDTO settings = new SettingsDTO();
+        verifiedUser.setSettings(settings);
 
         userRepository.save(verifiedUser);
         LOGGER.info("User age is {}: ", verifiedUser.getAge());
@@ -256,9 +265,12 @@ public class OnboardingService {
                 .build();
     }
 
-    public PreferenceResponse yourPreference(PreferenceRequest preferenceRequest) {
+    public PreferenceResponse yourPreference(PreferenceDTO preferenceRequest) {
         LOGGER.info("Entering OnboardingService.yourPreference");
         User verifiedUser = verifyUserByPhoneNumber(preferenceRequest.getUserPhoneNumber());
+//        ModelMapper modelMapper = new ModelMapper();
+//        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//        UserPreference userPreference = modelMapper.map(preferenceRequest, UserPreference.class);
         UserPreference preference = UserPreference.builder()
                 .userPhoneNumber(preferenceRequest.getUserPhoneNumber())
                 .preferredGender(preferenceRequest.getPreferredGender())
@@ -363,7 +375,6 @@ public class OnboardingService {
 
     private ConfirmationToken generateConfirmationToken(User user) {
         LOGGER.info("Entering OnboardingService.generateConfirmationToken");
-//        String token = UUID.randomUUID().toString();
         String token = generateRandomCode();
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(15);

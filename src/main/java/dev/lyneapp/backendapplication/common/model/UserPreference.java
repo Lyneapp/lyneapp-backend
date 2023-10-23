@@ -46,6 +46,7 @@ public class UserPreference {
     private Duration timeSinceLikedInteraction;
 
     private LocalDateTime preferenceCreatedAt;
+    private LocalDateTime preferenceUpdatedAt;
     private LocalDateTime recommendationCreatedAt;
 
     private boolean isAMatch;
@@ -56,6 +57,7 @@ public class UserPreference {
     private boolean interactedWithUser;
     private boolean hasAccountVerified;
     private boolean preferenceCreated;
+    private boolean preferenceUpdated;
 
     @Reference
     private User user;

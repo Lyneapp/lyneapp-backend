@@ -4,6 +4,7 @@ package dev.lyneapp.backendapplication.common.model;
 import dev.lyneapp.backendapplication.onboarding.model.Location;
 import dev.lyneapp.backendapplication.onboarding.model.PhoneNumberLookUpData;
 import dev.lyneapp.backendapplication.onboarding.model.Prompt;
+import dev.lyneapp.backendapplication.settings.model.SettingsDTO;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,7 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
@@ -19,7 +19,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -77,6 +76,8 @@ public class User implements UserDetails {
     private String gender;
     private String age;
 
+    private int remainingBouquets;
+
     private double score;
 
     private List<String> tribe = new ArrayList<>();
@@ -97,6 +98,9 @@ public class User implements UserDetails {
     private UserPreference preferences;
     private PhoneNumberLookUpData phoneNumberLookUpData;
 
+    private SettingsDTO settings;
+
+    private boolean bouquetSubscriptionEnabled;
     private boolean isBanned;
     private boolean accountEnabled;
     private boolean accountLocked;

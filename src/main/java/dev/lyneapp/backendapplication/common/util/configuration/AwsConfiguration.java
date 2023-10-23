@@ -5,8 +5,9 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder;
 import com.amazonaws.services.personalizeruntime.AmazonPersonalizeRuntime;
-import com.amazonaws.services.personalizeruntime.AmazonPersonalizeRuntimeClient;
 import com.amazonaws.services.personalizeruntime.AmazonPersonalizeRuntimeClientBuilder;
+import com.amazonaws.services.rekognition.AmazonRekognition;
+import com.amazonaws.services.rekognition.AmazonRekognitionClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
@@ -22,6 +23,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 @Configuration
 public class AwsConfiguration {
 
+    @Bean
+    public AmazonRekognition rekognitionClient() {
+        return AmazonRekognitionClientBuilder.standard()
+                .withRegion(Regions.US_EAST_1)
+                .build();
+    }
 
     @Bean
     public AmazonPersonalizeRuntime personalizeRuntimeClient() {

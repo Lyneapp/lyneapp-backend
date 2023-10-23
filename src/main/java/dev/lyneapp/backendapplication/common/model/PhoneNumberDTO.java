@@ -1,4 +1,4 @@
-package dev.lyneapp.backendapplication.onboarding.model.request;
+package dev.lyneapp.backendapplication.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PhoneNumberRequest {
+public class PhoneNumberDTO {
     @NotBlank(message = "Phone number cannot be blank.")
     @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Invalid phone number")
     @Size(max = 15, message = "Phone number cannot exceed 15 characters.")

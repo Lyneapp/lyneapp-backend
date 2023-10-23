@@ -1,4 +1,4 @@
-package dev.lyneapp.backendapplication.recommendation.model;
+package dev.lyneapp.backendapplication.common.model;
 
 
 import dev.lyneapp.backendapplication.onboarding.model.Location;
@@ -36,7 +36,10 @@ public class UserProfile {
     private String aboutUser;
     private String gender;
     private String age;
+    private String dateOfBirth;
+    private Location placeOfBirth;
     private String profileUrl;
+    private int remainingBouquets;
 
     private List<String> tribe = new ArrayList<>();
     private List<String> languages = new ArrayList<>();

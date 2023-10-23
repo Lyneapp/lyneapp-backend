@@ -1,6 +1,7 @@
 package dev.lyneapp.backendapplication.onboarding.controller;
 
 
+import dev.lyneapp.backendapplication.common.model.PhoneNumberDTO;
 import dev.lyneapp.backendapplication.onboarding.model.request.*;
 import dev.lyneapp.backendapplication.onboarding.model.response.*;
 import dev.lyneapp.backendapplication.onboarding.service.OnboardingService;
@@ -33,7 +34,7 @@ public class OnboardingController {
     private final OnboardingService onboardingService;
 
     @PostMapping(path ="phoneNumberSignup")
-    public ResponseEntity<?> phoneNumberSignUp(@Valid @RequestBody PhoneNumberRequest yourPhoneNumberRequest) {
+    public ResponseEntity<?> phoneNumberSignUp(@Valid @RequestBody PhoneNumberDTO yourPhoneNumberRequest) {
         LOGGER.info("Phone number signup request received for user with phone number: {}", yourPhoneNumberRequest.getUserPhoneNumber());
         onboardingService.phoneNumberSignUp(yourPhoneNumberRequest);
         LOGGER.info("Phone number signup request completed successfully for user with phone number: {}", yourPhoneNumberRequest.getUserPhoneNumber());
@@ -89,7 +90,7 @@ public class OnboardingController {
     }
 
     @PostMapping(path = "yourPreference")
-    public ResponseEntity<PreferenceResponse> yourPreference(@Valid @RequestBody PreferenceRequest preferenceRequest) {
+    public ResponseEntity<PreferenceResponse> yourPreference(@Valid @RequestBody PreferenceDTO preferenceRequest) {
         LOGGER.info("Preference request received for user with phone number: {}", preferenceRequest.getUserPhoneNumber());
         PreferenceResponse preferenceResponse = onboardingService.yourPreference(preferenceRequest);
         LOGGER.info("Preference request completed successfully for user with phone number: {}", preferenceRequest.getUserPhoneNumber());

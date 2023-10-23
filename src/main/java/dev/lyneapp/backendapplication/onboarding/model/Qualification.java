@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Qualification {
+    private String userPhoneNumber;
     private String highestDegree;
     private String institutionName;
 }

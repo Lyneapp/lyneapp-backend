@@ -22,7 +22,7 @@ import java.util.List;
 @Validated
 @NoArgsConstructor
 @AllArgsConstructor
-public class PreferenceRequest {
+public class PreferenceDTO {
     @NotBlank(message = "Phone number cannot be blank.")
     @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$")
     @Size(max = 15)
@@ -35,16 +35,20 @@ public class PreferenceRequest {
     private Religion preferredReligion;
     private Children doYouWantSomeoneWithChildren;
     private Qualification preferredQualification;
+    private Occupation preferredOccupation;
 
     private List<Location> preferredLocations = new ArrayList<>();
     private List<String> preferredInterests = new ArrayList<>();
     private List<String> preferredLanguages = new ArrayList<>();
 
     private LocalDateTime preferenceCreatedAt;
+    private LocalDateTime preferenceUpdatedAt;
 
     private boolean isAMatch;
     private boolean isBlocked;
     private boolean shouldTheyDrink;
     private boolean shouldTheySmoke;
+    private boolean shouldTheyHaveChildren;
     private boolean preferenceCreated;
+    private boolean preferenceUpdated;
 }

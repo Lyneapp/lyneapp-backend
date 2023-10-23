@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HeightRange {
+    private String userPhoneNumber;
     private int minimumHeight;
     private int maximumHeight;
     private boolean openToAll;

@@ -55,6 +55,11 @@ public class ApplicationConfiguration {
 //    public void dropChatMessagesCollection() {
 //        mongoTemplate.dropCollection("chatMessages");
 //    }
+//    // FIXME - DO NOT INCLUDE IN PRODUCTION
+//    @PostConstruct
+//    public void dropBouquetCollection() {
+//        mongoTemplate.dropCollection("bouquet");
+//    }
 
     @Bean
     public UserDetailsService userDetailsService() {

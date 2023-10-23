@@ -4,7 +4,7 @@ package dev.lyneapp.backendapplication.recommendation.controller;
 import com.amazonaws.services.personalizeruntime.model.GetRecommendationsResult;
 import dev.lyneapp.backendapplication.common.model.User;
 import dev.lyneapp.backendapplication.recommendation.model.RecommendationRequest;
-import dev.lyneapp.backendapplication.recommendation.model.UserProfile;
+import dev.lyneapp.backendapplication.common.model.UserProfile;
 import dev.lyneapp.backendapplication.recommendation.service.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

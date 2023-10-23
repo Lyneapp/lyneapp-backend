@@ -21,17 +21,18 @@ import java.util.Objects;
 public class WSChatService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(WSChatService.class);
+    private static final String MESSAGE_NOTIFICATION = "You have a new message";
 
     private final WSMessageRepository chatMessageRepository;
 
-    private static final String MESSAGE_NOTIFICATION = "You have a new message";
+
 
 //    @Value("${sns.topic.arn}")
 //    private String snsTopicArn;
 
-
     public ChatMessage sendMessage(ChatMessage chatMessage) {
         LOGGER.info("Entering WSChatService.sendMessage ,Sending message: {}", chatMessage);
+
         chatMessage.setTimestamp(System.currentTimeMillis());
         chatMessage.setSenderName("Uchenna"); // hard coded for now
         chatMessage.setRecipientName("Phoenixtype"); // hard coded for now

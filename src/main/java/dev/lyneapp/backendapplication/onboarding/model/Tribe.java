@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Tribe {
     // TODO If openToAll is true then the list must be set to empty - implement this logic to set the other field to null when openToAll is true
+    private String userPhoneNumber;
     private List<String> preferredTribes;
     private boolean openToAll;
 }

@@ -10,7 +10,7 @@ import dev.lyneapp.backendapplication.common.repository.UserPreferenceRepository
 import dev.lyneapp.backendapplication.common.repository.UserRepository;
 import dev.lyneapp.backendapplication.common.util.exception.UserIdNotFoundException;
 import dev.lyneapp.backendapplication.recommendation.model.RecommendationRequest;
-import dev.lyneapp.backendapplication.recommendation.model.UserProfile;
+import dev.lyneapp.backendapplication.common.model.UserProfile;
 import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -179,7 +179,7 @@ public class RecommendationService {
 //                continue;
 //            }
 
-            UserProfile userProfile = getUserProfile(recommendation);
+            UserProfile userProfile = getRecommendationProfile(recommendation);
             filteredRecommendationsUserProfile.add(userProfile);
         }
 
@@ -190,14 +190,11 @@ public class RecommendationService {
         return finalRecommendationsUserProfile;
     }
 
-    // FIXME: Use conditional logic for fields that are not mandatory to avoid null pointer exceptions
-    private static UserProfile getUserProfile(User recommendation) {
-        LOGGER.info("Entering RecommendationService.getUserProfile, Getting user profile for user {}", recommendation.getUserPhoneNumber());
+    public static UserProfile getRecommendationProfile(User recommendation) {
         UserProfile userProfile = new UserProfile();
         Optional.ofNullable(recommendation.getId()).ifPresent(userProfile::setId);
         Optional.ofNullable(recommendation.getUserPhoneNumber()).ifPresent(userProfile::setUserPhoneNumber);
         Optional.ofNullable(recommendation.getFirstName()).ifPresent(userProfile::setFirstName);
-        Optional.ofNullable(recommendation.getLastName()).ifPresent(userProfile::setLastName);
         Optional.ofNullable(recommendation.getAge()).ifPresent(userProfile::setAge);
         Optional.ofNullable(recommendation.getMediaFileURLs()).ifPresent(userProfile::setMediaFileURLs);
         Optional.ofNullable(recommendation.getTribe()).ifPresent(userProfile::setTribe);
@@ -216,11 +213,8 @@ public class RecommendationService {
         Optional.ofNullable(recommendation.getPrompts()).ifPresent(userProfile::setPrompts);
         Optional.of(recommendation.isDoYouDrink()).ifPresent(userProfile::setDoYouDrink);
         Optional.of(recommendation.isDoYouSmoke()).ifPresent(userProfile::setDoYouSmoke);
-        LOGGER.info("Exiting RecommendationService.getUserProfile, Returning user profile for user {}", recommendation.getUserPhoneNumber());
         return userProfile;
     }
-
-
 
     @Cacheable(value = "Users", key = "#recommendationRequest.getUserPhoneNumber()", unless = "#result.size() == 0")
     public List<User> getCachedVanillaRecommendations(RecommendationRequest recommendationRequest) {
