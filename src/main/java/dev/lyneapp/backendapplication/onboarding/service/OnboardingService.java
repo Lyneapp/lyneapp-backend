@@ -52,7 +52,6 @@ import static dev.lyneapp.backendapplication.common.util.exception.ExceptionMess
 // TODO This implementation means if you don't verify the email it still saves to DB, how do we remove if verification fails
 // TODO Just return a string that says email confirmed, we can return a response object if we want to include more information
 
-
 @Service
 @RequiredArgsConstructor
 public class OnboardingService {
